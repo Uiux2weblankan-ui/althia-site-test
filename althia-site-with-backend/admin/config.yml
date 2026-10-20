@@ -2,6 +2,7 @@
 # ALTHIA — Decap CMS configuration
 # Editors log in at https://<your-site>/admin/
 # Every save is a Git commit; Netlify redeploys automatically (about 30 s).
+# The site files live in the repo folder "althia-site-with-backend" (Netlify publish directory).
 # =====================================================================
 
 backend:
@@ -23,7 +24,7 @@ site_url: https://leafy-custard-ca18a3.netlify.app
 display_url: https://leafy-custard-ca18a3.netlify.app
 logo_url: /assets/img/althia-logo.svg
 
-media_folder: assets/uploads     # where uploaded images are saved in the repo
+media_folder: althia-site-with-backend/assets/uploads     # where uploaded images are saved in the repo (site files live in this folder)
 public_folder: /assets/uploads   # how the site links to them
 
 collections:
@@ -36,7 +37,7 @@ collections:
     files:
       - name: posts
         label: News, events & research
-        file: content/insights.json
+        file: althia-site-with-backend/content/insights.json
         fields:
           - label: Posts
             name: posts
@@ -140,7 +141,7 @@ collections:
     files:
       - name: home
         label: Countdown & video reviews
-        file: content/home.json
+        file: althia-site-with-backend/content/home.json
         fields:
           - label: Countdown banner (upcoming event)
             name: event
