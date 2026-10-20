@@ -1,0 +1,875 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admissions | ALTHIA Health Uni</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* Tokens taken from the "Homepage — Final Design" Figma frame */
+:root{
+  --bg:#FAFAF8; --white:#FFFFFF; --mist:#F2EFF7;
+  --ink:#15121C; --ink2:#463F52; --ink3:#6B6577;
+  --line:rgba(21,18,28,.10);
+  --purple:#653092; --blue:#2670B8; --green:#1BB680;
+  --grad:linear-gradient(100deg,#653092 0%,#2670B8 55%,#1BB680 100%);
+  --gutter:clamp(16px,4vw,56px); --maxw:1328px;
+  --r:12px;
+  --display:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --body:'Figtree',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --ease:cubic-bezier(.22,.8,.24,1);
+  color-scheme:light;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;overflow-x:clip}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1rem/1.6 var(--body);-webkit-font-smoothing:antialiased;overflow-x:clip}
+body.lock{overflow:hidden}
+h1,h2,h3,p,ul,ol,figure{margin:0;padding:0}
+ul,ol{list-style:none}
+a{color:inherit;text-decoration:none}
+img,svg{max-width:100%}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:6px}
+[id]{scroll-margin-top:150px}
+.container{width:100%;max-width:calc(var(--maxw) + 2*var(--gutter));margin-inline:auto;padding-inline:var(--gutter)}
+.eyebrow{font:700 .75rem/1 var(--display);letter-spacing:.16em;text-transform:uppercase;color:var(--purple)}
+.mix{font:400 clamp(1.9rem,3.2vw,2.6rem)/1.15 var(--display);letter-spacing:-.02em;text-wrap:balance}
+.mix b{font-weight:800}
+
+/* image slots: filled by JS from the IMG map; gradient fallback if a photo fails */
+[data-img]{background-color:#2a2433}
+[data-img].noimg{background-image:var(--grad)!important}
+
+/* ---------- header ---------- */
+.hdr{position:fixed;inset:0 0 auto 0;z-index:50;height:80px;background:rgba(21,18,28,.27);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);transition:background .4s}
+.hdr.solid{background:rgba(21,18,28,.86)}
+.hdr-in{height:100%;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.logo{display:block;line-height:0;color:#fff}
+.logo svg{height:28px;width:auto}
+.nav{display:flex;align-items:center;gap:clamp(18px,2.6vw,38px)}
+.nav a{font:500 .82rem/1 var(--display);letter-spacing:.01em;color:rgba(255,255,255,.92);padding-block:8px;background:linear-gradient(#fff,#fff) left bottom/0 1.5px no-repeat;transition:background-size .4s var(--ease)}
+.nav a:hover,.nav a[aria-current="page"]{background-size:100% 1.5px;color:#fff}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:38px;padding:0 22px;border-radius:999px;border:0;cursor:pointer;font:700 .82rem/1 var(--display);color:#fff;background:var(--grad);background-size:180% 100%;background-position:0 0;transition:background-position .6s var(--ease),box-shadow .5s var(--ease),transform .4s var(--ease);white-space:nowrap}
+.btn:hover{background-position:100% 0;box-shadow:0 14px 30px -14px rgba(38,112,184,.8);transform:translateY(-1px)}
+.btn.lg{height:48px;padding:0 26px;font-size:.88rem}
+.btn .ar{transition:transform .4s var(--ease)}
+.btn:hover .ar{transform:translateX(4px)}
+.btn.ghost{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.55)}
+.btn.ghost:hover{background:rgba(255,255,255,.18);box-shadow:none}
+.menu-btn{display:none;width:42px;height:42px;border-radius:999px;border:1px solid rgba(255,255,255,.4);background:transparent;color:#fff;cursor:pointer;align-items:center;justify-content:center}
+.menu-btn span,.menu-btn span::before,.menu-btn span::after{display:block;width:16px;height:1.5px;background:#fff;position:relative;transition:transform .3s}
+.menu-btn span::before,.menu-btn span::after{content:"";position:absolute;left:0}
+.menu-btn span::before{top:-5px}.menu-btn span::after{top:5px}
+.hdr.open .menu-btn span{background:transparent}
+.hdr.open .menu-btn span::before{transform:translateY(5px) rotate(45deg)}
+.hdr.open .menu-btn span::after{transform:translateY(-5px) rotate(-45deg)}
+@media (max-width:980px){
+  .menu-btn{display:inline-flex}
+  .hdr .btn{display:none}
+  .nav{position:absolute;top:80px;left:0;right:0;flex-direction:column;align-items:stretch;gap:0;padding:8px var(--gutter) 20px;background:rgba(21,18,28,.96);display:none}
+  .hdr.open .nav{display:flex}
+  .nav a{padding:15px 0;border-bottom:1px solid rgba(255,255,255,.1);font-size:.95rem;background:none}
+}
+
+/* ---------- banner ---------- */
+.ban{position:relative;height:clamp(360px,52vh,460px);display:flex;align-items:flex-end;color:#fff;overflow:hidden;background:var(--ink)}
+.ban-img{position:absolute;inset:0;background:var(--img) center 50%/cover no-repeat;transform:scale(1.08);animation:kb 14s var(--ease) forwards}
+@keyframes kb{to{transform:scale(1)}}
+.ban::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(21,18,28,.85) 0%,rgba(21,18,28,.5) 50%,rgba(21,18,28,.2) 100%),linear-gradient(0deg,rgba(21,18,28,.55),transparent 55%)}
+.emblem{position:absolute;right:-60px;bottom:-140px;width:min(520px,60vw);height:auto;color:#fff;opacity:.08;z-index:1;pointer-events:none}
+.ban .container{position:relative;z-index:2;padding-top:80px;padding-bottom:clamp(36px,5vw,56px)}
+.crumb{display:flex;align-items:center;gap:10px;font-size:.84rem;color:rgba(255,255,255,.72);margin-bottom:16px}
+.crumb a:hover{color:#fff}
+.crumb i{width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.6)}
+.ban h1{font:400 clamp(2.4rem,4.8vw,3.9rem)/1.02 var(--display);letter-spacing:-.02em}
+.ban h1 b{font-weight:800}
+.ban h1 .ln{display:block;overflow:hidden;padding-bottom:.08em}
+.ban h1 .ln>span{display:inline-block;transform:translateY(105%);animation:up 1s var(--ease) forwards}
+.ban h1 .ln:nth-child(2)>span{animation-delay:.1s}
+@keyframes up{to{transform:none}}
+.ban p.sub{margin-top:14px;max-width:34rem;font-size:1rem;color:rgba(255,255,255,.85)}
+
+/* ---------- sticky "on this page" bar ---------- */
+.fieldnav{position:sticky;top:80px;z-index:30;background:rgba(250,250,248,.9);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.fn-in{display:flex;align-items:center;gap:8px;height:64px;overflow-x:auto;scrollbar-width:none}
+.fn-in::-webkit-scrollbar{display:none}
+.fn-in .lbl{font:700 .7rem/1 var(--display);letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin-right:10px;white-space:nowrap}
+.fn-in a{display:inline-flex;align-items:center;height:38px;padding:0 16px;border-radius:999px;font:600 .84rem/1 var(--display);color:var(--ink2);white-space:nowrap;transition:color .3s,background .3s}
+.fn-in a:hover{background:var(--mist);color:var(--ink)}
+.fn-in a.on{color:#fff;background:var(--ink)}
+
+/* ---------- shared section bits ---------- */
+.sec{padding-block:clamp(72px,9vw,120px)}
+.sec.white{background:var(--white)}
+.sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:clamp(32px,4vw,52px)}
+.sec-head .mix{margin-top:14px;max-width:38rem}
+.sec-head p.lead{max-width:26rem;color:var(--ink2);font-size:.97rem}
+.tag{display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:999px;font:700 .64rem/1 var(--display);letter-spacing:.1em;text-transform:uppercase;background:var(--mist);color:var(--purple)}
+.go{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;flex:none;background:transparent;cursor:pointer;transition:background .4s,border-color .4s,color .4s,transform .5s var(--ease)}
+.go svg{width:16px;height:16px}
+
+/* ---------- 1. admission steps ---------- */
+.steps{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:0 clamp(20px,3vw,40px)}
+.steps-line{position:absolute;left:28px;right:calc((100% - 3*clamp(20px,3vw,40px))/4 - 28px);top:28px;height:2px;background:var(--line);overflow:hidden}
+.steps-line i{position:absolute;inset:0;background:var(--grad);transform-origin:0 50%;transform:scaleX(var(--p,0))}
+.step{position:relative}
+.step .dot{position:relative;z-index:1;width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:var(--bg);border:1px solid var(--line);font:800 .9rem/1 var(--display);letter-spacing:.02em;color:var(--ink3);transition:background .6s var(--ease),color .6s,border-color .6s}
+.step.on .dot{background:var(--grad);border-color:transparent;color:#fff}
+.step h3{margin-top:28px;font:800 1rem/1.25 var(--display);letter-spacing:-.005em;text-transform:uppercase}
+.step p{margin-top:10px;color:var(--ink2);font-size:.93rem;max-width:19rem}
+.step .need{display:flex;gap:8px;margin-top:18px;padding-top:16px;border-top:1px solid var(--line);font-size:.8rem;line-height:1.45;color:var(--ink3)}
+.step .need b{font:700 .66rem/1.7 var(--display);letter-spacing:.12em;text-transform:uppercase;color:var(--purple);white-space:nowrap}
+.step a.lnk{display:inline-flex;align-items:center;gap:6px;margin-top:14px;font:700 .8rem/1 var(--display);color:var(--ink)}
+.step a.lnk svg{width:14px;height:14px;transition:transform .4s var(--ease)}
+.step a.lnk:hover svg{transform:translateX(4px)}
+
+.dates{margin-top:clamp(56px,7vw,88px);display:grid;grid-template-columns:auto repeat(4,1fr);border:1px solid var(--line);border-radius:var(--r);background:var(--white);overflow:hidden}
+.dates .dh{padding:26px 28px;background:var(--ink);color:#fff;display:flex;flex-direction:column;justify-content:center;gap:8px;min-width:200px}
+.dates .dh span{font:700 .68rem/1 var(--display);letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.6)}
+.dates .dh b{font:800 1.15rem/1.2 var(--display)}
+.dt{padding:24px 26px;border-left:1px solid var(--line)}
+.dt span{display:block;font:700 .66rem/1 var(--display);letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)}
+.dt b{display:block;margin-top:12px;font:800 1.15rem/1.15 var(--display);letter-spacing:-.01em}
+.dt small{display:block;margin-top:6px;font-size:.8rem;color:var(--ink3)}
+@media (max-width:1080px){
+  .dates{grid-template-columns:1fr 1fr}
+  .dates .dh{grid-column:1/-1;flex-direction:row;align-items:center;justify-content:space-between}
+  .dt{border-top:1px solid var(--line)}
+  .dt:nth-child(even){border-left:0}
+}
+@media (max-width:860px){
+  .steps{grid-template-columns:1fr;gap:0}
+  .steps-line{left:27px;right:auto;top:28px;bottom:28px;width:2px;height:auto}
+  .steps-line i{transform-origin:50% 0;transform:scaleY(var(--p,0))}
+  .step{padding:0 0 40px 78px}
+  .step:last-child{padding-bottom:0}
+  .step .dot{position:absolute;left:0;top:0}
+  .step h3{margin-top:14px}
+}
+@media (max-width:520px){.dates{grid-template-columns:1fr}.dt{border-left:0}}
+
+/* ---------- 2. entry requirements ---------- */
+.req-grid{display:grid;grid-template-columns:280px 1fr;gap:clamp(32px,5vw,72px);align-items:start}
+.req-tabs{position:sticky;top:170px;display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.rt{display:grid;grid-template-columns:34px 1fr auto;align-items:center;gap:10px;padding:18px 16px 18px 0;border:0;border-bottom:1px solid var(--line);background:none;text-align:left;cursor:pointer;position:relative;transition:padding .5s var(--ease),color .3s;color:var(--ink2)}
+.rt::before{content:"";position:absolute;left:-1px;top:-1px;bottom:-1px;width:0;background:var(--ink);border-radius:var(--r);transition:width .5s var(--ease);z-index:-1}
+.req-tabs{isolation:isolate}
+.rt .n{font:700 .74rem/1 var(--display);letter-spacing:.06em;color:var(--ink3);transition:color .3s}
+.rt .t{font:800 .92rem/1.2 var(--display);text-transform:uppercase;letter-spacing:-.005em}
+.rt .c{font:600 .74rem/1 var(--display);color:var(--ink3);transition:color .3s}
+.rt:hover{color:var(--ink)}
+.rt.on{color:#fff;padding-left:18px;border-bottom-color:transparent}
+.rt.on::before{width:calc(100% + 2px)}
+.rt.on .n,.rt.on .c{color:rgba(255,255,255,.6)}
+.req-tabs .hint{margin-top:22px;font-size:.84rem;color:var(--ink3)}
+.req-tabs .hint a{color:var(--purple);font-weight:600;border-bottom:1px solid currentColor}
+
+.req-panel{display:grid;gap:16px}
+.req-panel.swap{animation:swap .6s var(--ease)}
+@keyframes swap{from{opacity:0;transform:translateY(14px)}}
+.rc{background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:clamp(22px,3vw,32px);transition:box-shadow .5s var(--ease),border-color .5s}
+.rc:hover{border-color:transparent;box-shadow:0 22px 50px -30px rgba(21,18,28,.35)}
+.rc-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.rc-head .tags{display:flex;gap:6px;flex-wrap:wrap}
+.rc-head h3{margin-top:12px;font:800 clamp(1.05rem,1.6vw,1.25rem)/1.25 var(--display);text-transform:uppercase;letter-spacing:-.01em}
+.btn.line{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.line:hover{background:var(--ink);color:#fff;border-color:var(--ink);box-shadow:none}
+.rc-rows{display:grid;grid-template-columns:repeat(3,1fr);margin-top:24px;border-top:1px solid var(--line)}
+.rr{padding:20px 20px 0 0}
+.rr+.rr{padding-left:20px;border-left:1px solid var(--line)}
+.rr h4{margin:0 0 10px;display:flex;align-items:center;gap:8px;font:700 .68rem/1 var(--display);letter-spacing:.12em;text-transform:uppercase;color:var(--purple)}
+.rr h4 svg{width:15px;height:15px}
+.rr li{position:relative;padding-left:14px;font-size:.88rem;line-height:1.5;color:var(--ink2)}
+.rr li+li{margin-top:7px}
+.rr li::before{content:"";position:absolute;left:0;top:.62em;width:5px;height:5px;border-radius:50%;background:var(--grad)}
+
+.docs{margin-top:clamp(40px,5vw,64px);display:grid;grid-template-columns:1fr 1.5fr;gap:32px;padding:clamp(26px,3.5vw,44px);border-radius:var(--r);background:var(--mist)}
+.docs h3{font:400 clamp(1.4rem,2.2vw,1.8rem)/1.2 var(--display);letter-spacing:-.02em}
+.docs h3 b{font-weight:800}
+.docs p{margin-top:12px;font-size:.88rem;color:var(--ink2);max-width:22rem}
+.docs ul{display:grid;grid-template-columns:1fr 1fr;gap:12px 24px;align-content:start}
+.docs li{display:flex;gap:12px;align-items:flex-start;font-size:.9rem;line-height:1.45}
+.docs li svg{flex:none;width:22px;height:22px;padding:5px;border-radius:50%;background:var(--white);color:var(--purple)}
+.docs li small{display:block;color:var(--ink3);font-size:.78rem}
+@media (max-width:980px){
+  .req-grid{grid-template-columns:1fr}
+  .req-tabs{position:static;flex-direction:row;overflow-x:auto;scrollbar-width:none;border-top:0;gap:8px;margin-inline:calc(-1*var(--gutter));padding-inline:var(--gutter)}
+  .req-tabs::-webkit-scrollbar{display:none}
+  .rt{flex:none;grid-template-columns:auto auto;padding:12px 16px;border:1px solid var(--line);border-radius:999px}
+  .rt .n,.req-tabs .hint{display:none}
+  .rt::before{border-radius:999px;left:-1px;right:-1px;width:auto;opacity:0;transition:opacity .3s}
+  .rt.on{padding-left:16px;border-color:var(--ink)}
+  .rt.on::before{width:auto;opacity:1}
+}
+@media (max-width:760px){
+  .rc-rows{grid-template-columns:1fr}
+  .rr,.rr+.rr{padding:18px 0 0;border-left:0}
+  .rr+.rr{margin-top:18px;border-top:1px solid var(--line)}
+  .docs{grid-template-columns:1fr}
+}
+@media (max-width:520px){.docs ul{grid-template-columns:1fr}}
+
+/* ---------- 3. apply form ---------- */
+.apply{display:grid;grid-template-columns:minmax(280px,.8fr) 1.7fr;border-radius:var(--r);overflow:hidden;background:var(--white);border:1px solid var(--line);box-shadow:0 40px 80px -60px rgba(21,18,28,.45)}
+.ap-side{position:relative;overflow:hidden;background:var(--ink);color:#fff;padding:clamp(28px,4vw,48px);display:flex;flex-direction:column;gap:32px}
+.ap-side::before{content:"";position:absolute;width:420px;height:420px;left:-140px;bottom:-200px;border-radius:50%;background:var(--grad);filter:blur(90px);opacity:.45}
+.ap-side .emblem{right:-50px;bottom:-60px;width:300px;opacity:.07}
+.ap-side>*:not(.emblem){position:relative;z-index:1}
+.ap-side .eyebrow{color:rgba(255,255,255,.6)}
+.ap-side h2{margin-top:14px;font:400 clamp(1.7rem,2.6vw,2.2rem)/1.12 var(--display);letter-spacing:-.02em}
+.ap-side h2 b{font-weight:800}
+.ap-side p{margin-top:14px;color:rgba(255,255,255,.7);font-size:.92rem}
+.ap-list li{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.1);font-size:.88rem;color:rgba(255,255,255,.85)}
+.ap-list li:first-child{border-top:1px solid rgba(255,255,255,.1)}
+.ap-list svg{width:16px;height:16px;flex:none;color:#1BB680}
+.ap-help{margin-top:auto}
+.ap-help h4{margin:0 0 12px;font:700 .68rem/1 var(--display);letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.55)}
+.ap-help a{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;font:600 .9rem/1.3 var(--display);transition:color .3s}
+.ap-help a span{font:500 .78rem/1 var(--body);color:rgba(255,255,255,.5)}
+.ap-help a:hover{color:#8fd9be}
+
+.ap-form{padding:clamp(24px,4vw,52px);min-width:0}
+.prog{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:34px}
+.pg{border:0;background:none;padding:0;text-align:left;cursor:default}
+.pg i{display:block;height:3px;border-radius:3px;background:var(--line);overflow:hidden;position:relative}
+.pg i::after{content:"";position:absolute;inset:0;background:var(--grad);transform:scaleX(0);transform-origin:0 50%;transition:transform .7s var(--ease)}
+.pg.on i::after,.pg.done i::after{transform:none}
+.pg span{display:block;margin-top:12px;font:700 .68rem/1 var(--display);letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)}
+.pg b{display:block;margin-top:6px;font:700 .9rem/1.2 var(--display);color:var(--ink3);transition:color .3s}
+.pg.on b,.pg.done b{color:var(--ink)}
+.pg.done{cursor:pointer}
+
+.fs{display:none;border:0;margin:0;padding:0;min-width:0}
+.fs.on{display:block;animation:swap .6s var(--ease)}
+.fs legend{padding:0;font:400 clamp(1.3rem,2vw,1.6rem)/1.2 var(--display);letter-spacing:-.02em}
+.fs legend b{font-weight:800}
+.fs .sub{margin:8px 0 26px;font-size:.88rem;color:var(--ink3)}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:18px 20px}
+.fld{display:flex;flex-direction:column;gap:7px;min-width:0}
+.fld.full{grid-column:1/-1}
+.fld label{font:600 .8rem/1.2 var(--display);color:var(--ink)}
+.fld label em{font-style:normal;color:var(--purple)}
+.fld label small{font:400 .76rem/1 var(--body);color:var(--ink3)}
+.fld input,.fld select,.fld textarea{width:100%;height:50px;padding:0 16px;border:1px solid var(--line);border-radius:10px;background:var(--bg);font:400 .95rem/1.2 var(--body);color:var(--ink);transition:border-color .3s,box-shadow .3s,background .3s;-webkit-appearance:none;appearance:none}
+.fld textarea{height:110px;padding:14px 16px;resize:vertical;line-height:1.5}
+.fld select{padding-right:42px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 9l6 6 6-6' fill='none' stroke='%2315121C' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center;background-size:16px}
+.fld select:disabled{opacity:.55}
+.fld input::placeholder,.fld textarea::placeholder{color:#a19bab}
+.fld input:hover,.fld select:hover,.fld textarea:hover{border-color:rgba(21,18,28,.22)}
+.fld input:focus,.fld select:focus,.fld textarea:focus{outline:0;background:#fff;border-color:var(--blue);box-shadow:0 0 0 4px rgba(38,112,184,.12)}
+.fld .msg{display:none;font-size:.76rem;font-weight:600;color:var(--purple)}
+.fld.err input,.fld.err select,.fld.err textarea{border-color:var(--purple);box-shadow:0 0 0 4px rgba(101,48,146,.1)}
+.fld.err .msg{display:block}
+.phone{display:flex}
+.phone span{display:grid;place-items:center;padding:0 14px;border:1px solid var(--line);border-right:0;border-radius:10px 0 0 10px;background:var(--mist);font:600 .88rem/1 var(--display);color:var(--ink2)}
+.phone input{border-radius:0 10px 10px 0}
+.chk{display:flex;gap:12px;align-items:flex-start;cursor:pointer;font-size:.86rem;line-height:1.5;color:var(--ink2)}
+.fld .chk input{flex:none;width:20px;height:20px;padding:0;margin:1px 0 0;border:1.5px solid rgba(21,18,28,.3);border-radius:6px;-webkit-appearance:none;appearance:none;background:#fff;cursor:pointer;display:grid;place-items:center;transition:background .3s,border-color .3s}
+.fld .chk input:checked{background:var(--ink);border-color:var(--ink)}
+.fld .chk input:checked::after{content:"";width:9px;height:5px;border:2px solid #fff;border-top:0;border-right:0;transform:translateY(-1px) rotate(-45deg)}
+.fld label.chk{font:400 .86rem/1.5 var(--body);color:var(--ink2)}
+.chk a{color:var(--purple);font-weight:600}
+.fld.err .chk input{border-color:var(--purple)}
+
+.drop{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;min-height:150px;padding:24px;border:1.5px dashed rgba(21,18,28,.2);border-radius:var(--r);background:var(--bg);text-align:center;cursor:pointer;transition:border-color .3s,background .3s}
+.drop:hover,.drop.over{border-color:var(--blue);background:#fff}
+.drop input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.drop .ic{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:var(--grad);color:#fff}
+.drop .ic svg{width:20px;height:20px}
+.drop b{font:700 .92rem/1.3 var(--display)}
+.drop span{font-size:.8rem;color:var(--ink3)}
+.files{display:grid;gap:8px;margin-top:12px}
+.file{display:flex;align-items:center;gap:12px;padding:10px 12px 10px 14px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:.85rem}
+.file .ext{flex:none;width:38px;height:28px;border-radius:6px;display:grid;place-items:center;background:var(--mist);font:800 .6rem/1 var(--display);letter-spacing:.06em;color:var(--purple)}
+.file .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.file .sz{color:var(--ink3);font-size:.76rem}
+.file button{width:30px;height:30px;border:0;border-radius:50%;background:none;cursor:pointer;color:var(--ink3);display:grid;place-items:center}
+.file button:hover{background:var(--mist);color:var(--ink)}
+.file button svg{width:14px;height:14px}
+
+.ap-actions{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:34px;padding-top:24px;border-top:1px solid var(--line)}
+.ap-actions .step-of{font:600 .8rem/1 var(--display);color:var(--ink3)}
+.ap-actions .r{display:flex;gap:10px;margin-left:auto}
+.btn[disabled]{opacity:.6;pointer-events:none}
+.btn[hidden]{display:none}
+
+.done{display:none;text-align:left}
+.done.on{display:block;animation:swap .7s var(--ease)}
+.done .tick{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;background:var(--grad);color:#fff}
+.done .tick svg{width:28px;height:28px}
+.done h3{margin-top:24px;font:400 clamp(1.6rem,2.6vw,2.1rem)/1.15 var(--display);letter-spacing:-.02em}
+.done h3 b{font-weight:800}
+.done p{margin-top:12px;color:var(--ink2);max-width:32rem}
+.done .ref{display:inline-flex;gap:10px;align-items:center;margin-top:18px;padding:10px 16px;border-radius:999px;background:var(--mist);font:700 .85rem/1 var(--display)}
+.done .ref span{font-weight:600;color:var(--ink3)}
+.done ol{margin-top:28px;border-top:1px solid var(--line);counter-reset:d}
+.done ol li{counter-increment:d;display:flex;gap:16px;padding:14px 0;border-bottom:1px solid var(--line);font-size:.92rem;color:var(--ink2)}
+.done ol li::before{content:"0" counter(d);font:800 .8rem/1.7 var(--display);color:var(--purple)}
+.done .acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
+
+@media (max-width:980px){.apply{grid-template-columns:1fr}.ap-help{margin-top:0}}
+@media (max-width:600px){
+  .fgrid{grid-template-columns:1fr}
+  .prog b{font-size:.78rem}
+  .ap-actions .step-of{display:none}
+  .ap-actions .r{width:100%}
+  .ap-actions .r .btn{flex:1}
+}
+
+/* ---------- apply band ---------- */
+.cta{position:relative;overflow:hidden;background:var(--ink);color:#fff;padding-block:clamp(64px,8vw,100px)}
+.cta::before{content:"";position:absolute;width:640px;height:640px;right:-160px;top:-260px;border-radius:50%;background:var(--grad);filter:blur(120px);opacity:.35}
+.cta .container{position:relative;display:flex;align-items:flex-end;justify-content:space-between;gap:32px;flex-wrap:wrap}
+.cta .mix{font-size:clamp(2rem,3.6vw,3rem)}
+.cta p{margin-top:14px;color:rgba(255,255,255,.7);max-width:30rem}
+.cta .acts{display:flex;gap:12px;flex-wrap:wrap}
+.cta+.ftr{border-top:1px solid rgba(255,255,255,.08)}
+
+/* ---------- footer ---------- */
+.ftr{position:relative;background:var(--ink);color:#fff;overflow:hidden;padding-top:64px}
+.ftr .emblem{right:-80px;bottom:-200px;width:620px;opacity:.06}
+.ftr-grid{position:relative;z-index:1;display:grid;grid-template-columns:1.6fr 1fr 1.2fr 1fr;gap:40px}
+.ftr .logo svg{height:20px}
+.ftr p.pitch{margin-top:18px;max-width:17rem;font-size:.85rem;line-height:1.6;color:rgba(255,255,255,.55)}
+.ftr h4{margin:0 0 16px;font:600 .8rem/1 var(--display);letter-spacing:.08em;text-transform:uppercase}
+.ftr li{margin-bottom:10px;font-size:.85rem;color:rgba(255,255,255,.6)}
+.ftr li a{transition:color .3s}
+.ftr li a:hover{color:#fff}
+.ftr-base{position:relative;z-index:1;margin-top:48px;padding-block:22px;border-top:1px solid rgba(255,255,255,.1);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px 24px;font-size:.75rem;color:rgba(255,255,255,.4)}
+.ftr-base a:hover{color:#fff}
+@media (max-width:860px){.ftr-grid{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){.ftr-grid{grid-template-columns:1fr}}
+
+.rv{opacity:0;transform:translateY(26px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.rv.in{opacity:1;transform:none}
+.rv.d1{transition-delay:.08s}.rv.d2{transition-delay:.16s}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition-duration:.01ms!important}
+  .rv{opacity:1;transform:none}
+  .ban h1 .ln>span{transform:none}
+  .grow-box{clip-path:inset(0 round 12px)}.grow-cap{opacity:1}
+}
+</style>
+<link rel="stylesheet" href="assets/v4.css">
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="logo" viewBox="0 0 485 77"><g fill="currentColor">
+      <path d="M128.13 0.01H126.62V76.32H128.13V0.01Z"/>
+      <path d="M107.24 76.33H84.69L69.01 60.64C62.07 70.15 50.84 76.33 38.16 76.33C16.99 76.33 -0.16 59.08 0 37.88C0.16 16.94 17.39 -0.08 38.34 0.01C50.95 0.07 62.12 6.25 69.02 15.73L84.71 0.01H107.29L75.75 31.61L69.18 38.19L57.89 26.88L54.24 23.22C50.09 18.76 44.12 16.03 37.51 16.22C25.91 16.56 16.5 26.02 16.21 37.62C15.91 49.99 25.85 60.12 38.16 60.12C44.1 60.12 49.49 57.76 53.44 53.93H53.47L57.89 49.5L69.18 38.19L75.74 44.77L107.23 76.33H107.24Z"/>
+      <path d="M38.52 28.8C37.94 37.11 37.48 37.58 29.16 38.15C37.47 38.73 37.94 39.19 38.51 47.51C39.06 39.58 39.52 38.79 46.77 38.24L56.03 38.32C56.03 38.32 56.11 38.28 56.11 38.24C56.11 38.2 56.07 38.16 56.03 38.16L46.77 38.08C39.52 37.52 39.07 36.73 38.53 28.8H38.52Z"/>
+      <path d="M271.37 61.45V76.3H226.53V0H241.48V61.44H271.37V61.45Z"/>
+      <path d="M312.97 14.82H294.7V76.31H279.71V14.82H261.4V0.01H312.97V14.82Z"/>
+      <path d="M377.88 0.01V76.31H362.98V46.51H336.27V76.31H321.37V0.01H336.27V29.76H362.98V0.01H377.88Z"/>
+      <path d="M390.8 0.01H405.75V76.31H390.8V0.01Z"/>
+      <path d="M183.54 0.1H183.07L167.59 33.32H175.34L164.65 39.63L147.56 76.31H163.7L174.26 53.2L183.35 33.32L192.39 53.2L198.2 65.93L202.91 76.31H219.1L183.54 0.1Z"/>
+      <path d="M448.84 0.1H448.38L432.9 33.32H440.64L429.95 39.63L412.86 76.31H429L439.57 53.2L448.65 33.32L457.69 53.2L463.51 65.93L468.21 76.31H484.4L448.84 0.1Z"/>
+    </g></symbol>
+    <symbol id="emblem" viewBox="0 0 108 77"><g fill="currentColor">
+      <path d="M107.24 76.31H84.69L69.01 60.62C62.07 70.13 50.84 76.31 38.16 76.31C16.99 76.31 -.16 59.07 0 37.87C.16 16.92 17.4-.1 38.34 0C50.95.06 62.12 6.24 69.02 15.72L84.71 0H107.29L75.75 31.6L69.18 38.18L57.89 26.87L54.24 23.21C50.09 18.75 44.12 16.02 37.51 16.21C25.91 16.55 16.5 26.01 16.21 37.61C15.91 49.98 25.85 60.11 38.16 60.11C44.1 60.11 49.49 57.75 53.44 53.92H53.47L57.89 49.49L69.18 38.18L75.74 44.76L107.23 76.32Z"/>
+      <path d="M38.52 28.78C37.94 37.09 37.48 37.56 29.16 38.13C37.47 38.71 37.94 39.17 38.51 47.49C39.06 39.56 39.52 38.77 46.77 38.22L56.03 38.3C56.11 38.26 56.07 38.14 56.03 38.14L46.77 38.06C39.52 37.5 39.07 36.71 38.53 28.78Z"/>
+    </g></symbol>
+    <symbol id="arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  </defs>
+</svg>
+
+
+<header class="hdr" id="hdr">
+  <div class="container hdr-in">
+    <a class="logo" href="index.html" aria-label="ALTHIA home"><img src="assets/img/althia-logo.svg" alt="ALTHIA — SLIIT-Hemas Health Uni"></a>
+    <nav class="nav" id="nav" aria-label="Main">
+      <a href="about-us.html">About</a>
+      <a href="programmes.html">Programmes</a>
+      <a href="campus-facilities.html">Campus</a>
+      <a href="admissions.html" aria-current="page">Admissions</a>
+      <a href="insights.html">Insights</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <a class="btn" href="https://apply.sliit.lk/" target="_blank" rel="noopener">Apply Now</a>
+    <button class="menu-btn" id="menuBtn" aria-label="Menu" aria-expanded="false"><span></span></button>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- BANNER -->
+<section class="ban">
+  <div class="ban-img" data-img="banner" role="img" aria-label="Students talking together on campus"></div>
+  <svg class="emblem" viewBox="0 0 108 77" aria-hidden="true"><use href="#emblem"/></svg>
+  <div class="container">
+    <nav class="crumb" aria-label="Breadcrumb"><a href="index.html">Home</a><i></i><span>Admissions</span></nav>
+    <h1><span class="ln"><span>Your place.</span></span><span class="ln"><span><b>Four steps away.</b></span></span></h1>
+    <p class="sub">Choose a course, apply online in about 10 minutes, and we'll guide you from interview to your first day.</p>
+  </div>
+</section>
+
+<!-- ON THIS PAGE -->
+<nav class="fieldnav" aria-label="On this page">
+  <div class="container fn-in" id="fieldNav">
+    <span class="lbl">On this page</span>
+    <a href="#steps">How to apply</a>
+    <a href="#apply-sliit">Apply on SLIIT</a>
+  </div>
+</nav>
+
+<!-- 1. ADMISSION STEPS -->
+<section class="sec" id="steps">
+  <div class="container">
+    <div class="sec-head">
+      <div class="rv">
+        <span class="eyebrow">How to apply</span>
+        <h2 class="mix">From enquiry to <b>your first lecture.</b></h2>
+      </div>
+      <p class="lead rv d1">Most students go from application to offer in under two weeks. Our admissions team is with you at every step.</p>
+    </div>
+
+    <div class="steps" id="stepsList" role="list">
+      <span class="steps-line" aria-hidden="true"><i></i></span>
+      <div role="listitem" class="step rv">
+        <span class="dot">01</span>
+        <h3>Choose your course</h3>
+        <p>Explore our four programme areas and pick the course that fits your goals.</p>
+        <div class="need"><b>Tip</b><span>Not sure yet? Call us and an advisor will help you choose.</span></div>
+        <a class="lnk" href="programmes.html">View programmes <svg><use href="#arrow"/></svg></a>
+      </div>
+      <div role="listitem" class="step rv d1">
+        <span class="dot">02</span>
+        <h3>Apply online</h3>
+        <p>Fill in the form below and upload your documents. It takes about 10 minutes.</p>
+        <div class="need"><b>You need</b><span>NIC or passport, O/L and A/L results</span></div>
+        <a class="lnk" href="https://apply.sliit.lk/" target="_blank" rel="noopener">Start application <svg><use href="#arrow"/></svg></a>
+      </div>
+      <div role="listitem" class="step rv d2">
+        <span class="dot">03</span>
+        <h3>Interview &amp; offer</h3>
+        <p>A short, friendly chat with our admissions team. Your offer letter follows within 5 working days.</p>
+        <div class="need"><b>Format</b><span>On campus or online, about 20 minutes</span></div>
+      </div>
+      <div role="listitem" class="step rv d2">
+        <span class="dot">04</span>
+        <h3>Accept &amp; enrol</h3>
+        <p>Accept your offer, pay the first instalment and join orientation week.</p>
+        <div class="need"><b>Support</b><span>Instalment plans and scholarships available</span></div>
+      </div>
+    </div>
+
+    <div class="dates rv">
+      <div class="dh"><span>Key dates</span><b>February 2027 intake</b></div>
+      <div class="dt"><span>Applications open</span><b>1 Oct 2026</b><small>Now open</small></div>
+      <div class="dt"><span>Applications close</span><b>15 Jan 2027</b><small>Apply early, places are limited</small></div>
+      <div class="dt"><span>Interviews</span><b>Rolling</b><small>Within 7 days of applying</small></div>
+      <div class="dt"><span>Orientation</span><b>1 Feb 2027</b><small>Lectures begin 8 Feb</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- v4: CTA to the SLIIT online application -->
+<section class="v4-cta" id="apply-sliit">
+  <div class="v4-wrap">
+    <div class="rv v4-rv"><h2>Ready? <b>Apply on the SLIIT portal.</b></h2><p>All ALTHIA applications are made through SLIIT's official online application page. It takes about 10 minutes.</p></div>
+    <div class="acts rv v4-rv d1"><a class="v4-btn fill" href="https://apply.sliit.lk/" target="_blank" rel="noopener">Apply Now <span>&rarr;</span></a><a class="v4-btn ghost" href="contact.html#enquire">Talk to admissions</a></div>
+  </div>
+</section>
+
+<!-- 2. ENTRY REQUIREMENTS — hidden per client (v4). Remove the hidden attribute to show again. -->
+<section class="sec white v4-hidden" id="requirements" hidden>
+  <div class="container">
+    <div class="sec-head">
+      <div class="rv">
+        <span class="eyebrow">Entry requirements</span>
+        <h2 class="mix">Check you qualify, <b>course by course.</b></h2>
+      </div>
+      <p class="lead rv d1">Pick a programme area to see what each course asks for. Local and international qualifications are both accepted.</p>
+    </div>
+
+    <div class="req-grid">
+      <div class="req-tabs rv" id="reqTabs" role="tablist" aria-label="Programme areas"></div>
+      <div class="req-panel" id="reqPanel" role="tabpanel" aria-live="polite"></div>
+    </div>
+
+    <div class="docs rv">
+      <div>
+        <h3>Documents to <b>have ready.</b></h3>
+        <p>Scans or clear phone photos are fine. Bring the originals to your interview.</p>
+      </div>
+      <ul>
+        <li><svg><use href="#check"/></svg><span>NIC or passport<small>Copy of both sides</small></span></li>
+        <li><svg><use href="#check"/></svg><span>G.C.E. O/L and A/L certificates<small>Or results sheets if certificates are pending</small></span></li>
+        <li><svg><use href="#check"/></svg><span>Birth certificate</span></li>
+        <li><svg><use href="#check"/></svg><span>Two passport-size photos</span></li>
+        <li><svg><use href="#check"/></svg><span>English test results<small>IELTS or equivalent, if you have them</small></span></li>
+        <li><svg><use href="#check"/></svg><span>Medical fitness certificate<small>Nursing applicants only</small></span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 3. APPLY FORM — hidden per client (v4); applications now go to the SLIIT portal. -->
+<section class="sec v4-hidden" id="apply" hidden>
+  <div class="container">
+    <div class="apply rv">
+
+      <aside class="ap-side">
+        <svg class="emblem" viewBox="0 0 108 77" aria-hidden="true"><use href="#emblem"/></svg>
+        <div>
+          <span class="eyebrow">Apply form</span>
+          <h2>Start your <b>application.</b></h2>
+          <p>Three short steps. Your progress stays on this page until you submit.</p>
+        </div>
+        <ul class="ap-list">
+          <li><svg><use href="#check"/></svg>About 10 minutes</li>
+          <li><svg><use href="#check"/></svg>No application fee</li>
+          <li><svg><use href="#check"/></svg>Reply within 2 working days</li>
+        </ul>
+        <div class="ap-help">
+          <h4>Need help?</h4>
+          <a href="tel:+94117544801">+94 11 754 4801 <span>Call</span></a>
+          <a href="https://wa.me/94763306603" target="_blank" rel="noopener">+94 76 330 6603 <span>WhatsApp</span></a>
+          <a href="mailto:reach@althia.lk">reach@althia.lk <span>Email</span></a>
+        </div>
+      </aside>
+
+      <div class="ap-form">
+        <form id="appForm" novalidate>
+          <div class="prog" id="prog" aria-hidden="true">
+            <button type="button" class="pg on" data-to="0" tabindex="-1"><i></i><span>Step 01</span><b>About you</b></button>
+            <button type="button" class="pg" data-to="1" tabindex="-1"><i></i><span>Step 02</span><b>Your course</b></button>
+            <button type="button" class="pg" data-to="2" tabindex="-1"><i></i><span>Step 03</span><b>Documents</b></button>
+          </div>
+
+          <!-- step 1 -->
+          <fieldset class="fs on" data-step="0">
+            <legend>Tell us <b>about you.</b></legend>
+            <p class="sub">Use your name as it appears on your NIC or passport.</p>
+            <div class="fgrid">
+              <div class="fld"><label for="fFirst">First name <em>*</em></label><input id="fFirst" name="firstName" autocomplete="given-name" required><span class="msg">Please enter your first name.</span></div>
+              <div class="fld"><label for="fLast">Last name <em>*</em></label><input id="fLast" name="lastName" autocomplete="family-name" required><span class="msg">Please enter your last name.</span></div>
+              <div class="fld"><label for="fNic">NIC or passport number <em>*</em></label><input id="fNic" name="nic" required placeholder="e.g. 200512345678"><span class="msg">Please enter your NIC or passport number.</span></div>
+              <div class="fld"><label for="fDob">Date of birth <em>*</em></label><input id="fDob" name="dob" type="date" required><span class="msg">Please enter your date of birth.</span></div>
+              <div class="fld"><label for="fEmail">Email <em>*</em></label><input id="fEmail" name="email" type="email" autocomplete="email" required placeholder="you@example.com"><span class="msg">Please enter a valid email address.</span></div>
+              <div class="fld"><label for="fPhone">Mobile (WhatsApp) <em>*</em></label><div class="phone"><span>+94</span><input id="fPhone" name="phone" type="tel" inputmode="numeric" autocomplete="tel-national" required placeholder="77 123 4567" pattern="0?[0-9]{9}"></div><span class="msg">Please enter a 9-digit mobile number.</span></div>
+              <div class="fld full"><label for="fCity">City <em>*</em></label><input id="fCity" name="city" autocomplete="address-level2" required placeholder="e.g. Malabe"><span class="msg">Please enter your city.</span></div>
+            </div>
+          </fieldset>
+
+          <!-- step 2 -->
+          <fieldset class="fs" data-step="1">
+            <legend>Choose <b>your course.</b></legend>
+            <p class="sub">Check the <a href="programmes.html" style="color:var(--purple);font-weight:600">entry requirements</a> if you're unsure.</p>
+            <div class="fgrid">
+              <div class="fld"><label for="fArea">Programme area <em>*</em></label><select id="fArea" name="area" required><option value="">Select an area</option></select><span class="msg">Please choose a programme area.</span></div>
+              <div class="fld"><label for="fCourse">Course <em>*</em></label><select id="fCourse" name="course" required disabled><option value="">Select an area first</option></select><span class="msg">Please choose a course.</span></div>
+              <div class="fld"><label for="fIntake">Preferred intake <em>*</em></label><select id="fIntake" name="intake" required><option value="">Select an intake</option><option>February 2027</option><option>September 2027</option></select><span class="msg">Please choose an intake.</span></div>
+              <div class="fld"><label for="fQual">Highest qualification <em>*</em></label><select id="fQual" name="qualification" required><option value="">Select one</option><option>G.C.E. A/L</option><option>G.C.E. O/L</option><option>Edexcel / Cambridge A Level</option><option>Diploma</option><option>Degree</option><option>Other</option></select><span class="msg">Please choose your highest qualification.</span></div>
+              <div class="fld"><label for="fStream">A/L stream <small>(if applicable)</small></label><select id="fStream" name="stream"><option value="">Select a stream</option><option>Biological Science</option><option>Physical Science</option><option>Commerce</option><option>Arts</option><option>Technology</option></select></div>
+              <div class="fld"><label for="fYear">Year of exam</label><select id="fYear" name="examYear"></select></div>
+              <div class="fld full"><label for="fHear">How did you hear about us?</label><select id="fHear" name="source"><option value="">Select one</option><option>Social media</option><option>Friend or family</option><option>School visit</option><option>Education fair</option><option>Google search</option><option>Other</option></select></div>
+            </div>
+          </fieldset>
+
+          <!-- step 3 -->
+          <fieldset class="fs" data-step="2">
+            <legend>Upload <b>your documents.</b></legend>
+            <p class="sub">PDF, JPG or PNG, up to 5 MB each. You can also bring them to your interview.</p>
+            <div class="fgrid">
+              <div class="fld full">
+                <label class="drop" id="drop">
+                  <input type="file" id="fFiles" name="documents" multiple accept=".pdf,.jpg,.jpeg,.png">
+                  <span class="ic"><svg viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5M5 20h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  <b>Drop files here or browse</b>
+                  <span>NIC, certificates, results sheets, photo</span>
+                </label>
+                <div class="files" id="fileList"></div>
+                <span class="msg" id="fileMsg"></span>
+              </div>
+              <div class="fld full"><label for="fNote">Anything we should know? <small>(optional)</small></label><textarea id="fNote" name="note" placeholder="Questions, results you're waiting on, scholarship interest..."></textarea></div>
+              <div class="fld full"><label class="chk"><input type="checkbox" id="fConsent" name="consent" required><span>I confirm the details are correct and agree to ALTHIA contacting me about my application, in line with the <a href="#soon" data-soon>Privacy Policy</a>.</span></label><span class="msg">Please confirm to continue.</span></div>
+            </div>
+          </fieldset>
+
+          <div class="ap-actions" id="apActions">
+            <span class="step-of" id="stepOf">Step 1 of 3</span>
+            <div class="r">
+              <button type="button" class="btn lg line" id="backBtn" hidden>Back</button>
+              <button type="button" class="btn lg" id="nextBtn">Continue <span class="ar">&rarr;</span></button>
+            </div>
+          </div>
+        </form>
+
+        <div class="done" id="done" tabindex="-1">
+          <span class="tick"><svg><use href="#check"/></svg></span>
+          <h3>Application <b>received.</b></h3>
+          <p id="doneMsg">Thank you. We've sent a copy to your email.</p>
+          <span class="ref"><span>Reference</span><b id="doneRef"></b></span>
+          <ol>
+            <li>Our admissions team reviews your application within 2 working days.</li>
+            <li>We call or WhatsApp you to book your interview.</li>
+            <li>Your offer letter follows within 5 working days of the interview.</li>
+          </ol>
+          <div class="acts">
+            <a class="btn lg" href="campus-facilities.html">Explore the campus <span class="ar">&rarr;</span></a>
+            <a class="btn lg line" href="programmes.html">Back to programmes</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+</main>
+
+
+<footer class="ftr" id="contact">
+  <svg class="emblem" viewBox="0 0 108 77" aria-hidden="true"><use href="#emblem"/></svg>
+  <div class="container">
+    <div class="ftr-grid">
+      <div>
+        <a class="logo" href="index.html" aria-label="ALTHIA home"><img src="assets/img/althia-logo-white.svg" alt="ALTHIA — SLIIT-Hemas Health Uni"></a>
+        <p class="pitch">A health sciences university college shaping Sri Lanka's next generation of clinicians, carers and researchers.</p>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <ul><li><a href="programmes.html">Programmes</a></li><li><a href="short-courses.html">Short Courses</a></li><li><a href="campus-facilities.html">Campus &amp; Facilities</a></li><li><a href="about-us.html">About Althia</a></li><li><a href="admissions.html">Admissions</a></li><li><a href="insights.html">Insights</a></li><li><a href="https://apply.sliit.lk/" target="_blank" rel="noopener">Apply Now</a></li></ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul><li>SLIIT Malabe Campus,<br>New Kandy Road, Malabe</li><li>+94 11 754 4801</li><li>+94 76 330 6603</li><li>reach@althia.lk</li></ul>
+      </div>
+      <div>
+        <h4>Follow</h4>
+        <ul><li><a href="https://www.instagram.com/althia_lk" target="_blank" rel="noopener">Instagram</a></li><li><a href="https://www.facebook.com/profile.php?id=61585632940458" target="_blank" rel="noopener">Facebook</a></li><li><a href="https://www.tiktok.com/@sliit_hemas" target="_blank" rel="noopener">TikTok</a></li><li><a href="https://www.linkedin.com/company/sliit-hemas-allied-health-institute/" target="_blank" rel="noopener">LinkedIn</a></li></ul>
+      </div>
+    </div>
+    <div class="ftr-base"><span>&copy; 2026 ALTHIA. All rights reserved.</span><span><a href="#soon" data-soon>Privacy Policy</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#soon" data-soon>Terms of Service</a></span></div>
+  </div>
+</footer>
+
+<script>
+/* =====================================================================
+   IMAGES — one place to swap photos.
+   Placeholder is a free Unsplash photo. To use your own, replace the value
+   with a relative path, e.g.  banner: 'images/admissions/01-banner.jpg'
+   ===================================================================== */
+function U(id,w){return 'https://images.unsplash.com/photo-'+id+'?auto=format&fit=crop&w='+(w||1800)+'&q=80'}
+var IMG={
+  banner: U('1707960572634-8b7649870d95',2200) /* students on campus */
+};
+
+/* =====================================================================
+   ENTRY REQUIREMENTS — courses from the sitemap.
+   Requirement wording is DUMMY: confirm with the client.
+   tags: first tag = award level, second = awarding / partner body
+   ===================================================================== */
+var REQ=[
+  {id:'nursing',t:'Nursing',courses:[
+    {id:'hnd-nursing',t:'HND in Nursing',tags:['HND','ALTHIA'],
+      acad:['3 passes at G.C.E. A/L in one sitting (Biological Science preferred)','6 passes at O/L, including Maths, Science and English'],
+      eng:['C pass or above in O/L English','or the ALTHIA English placement test'],
+      oth:['Aged 18 to 35 at enrolment','Medical fitness certificate','Admissions interview']},
+    {id:'hd-nursing-deakin',t:'Higher Diploma in Nursing (Deakin)',tags:['Higher Diploma','Deakin pathway'],
+      acad:['3 passes at G.C.E. A/L, Biological Science stream','or a recognised Diploma in Nursing'],
+      eng:['IELTS Academic 6.0 overall (no band below 5.5)','or an accepted equivalent, for progression to Deakin'],
+      oth:['Medical fitness certificate','Admissions interview']}
+  ]},
+  {id:'psychology',t:'Psychology',courses:[
+    {id:'bsc-psychology',t:'BSc (Hons) Psychology',tags:['Degree','SLIIT'],
+      acad:['3 passes at G.C.E. A/L in any stream','O/L credit passes in Maths and English'],
+      eng:['B pass or above in O/L English','or the ALTHIA English placement test'],
+      oth:['Admissions interview']},
+    {id:'bsc-psychology-foreign',t:'BSc Psychology (Foreign Degree)',tags:['Degree','Partner university'],
+      acad:['3 passes at G.C.E. A/L with at least 2 C passes','or Edexcel / Cambridge A Levels at an equivalent level'],
+      eng:['IELTS Academic 6.0 overall (no band below 5.5)','or an accepted equivalent'],
+      oth:['Partner university admission rules apply','Admissions interview']}
+  ]},
+  {id:'biomedical',t:'Biomedical Science',courses:[
+    {id:'bsc-biomedical',t:'BSc (Hons) Biomedical Science',tags:['Degree','SLIIT'],
+      acad:['3 passes at G.C.E. A/L, Biological Science stream','Biology and Chemistry must be among the passes','O/L credit passes in Maths and English'],
+      eng:['C pass or above in O/L English','or the ALTHIA English placement test'],
+      oth:['Lab safety induction before the first semester','Admissions interview']}
+  ]},
+  {id:'health',t:'Health Science',courses:[
+    {id:'hd-health-science',t:'Higher Diploma in Health Science',tags:['Higher Diploma','ALTHIA'],
+      acad:['3 passes at G.C.E. A/L in any stream','or 6 O/L passes plus a recognised foundation course'],
+      eng:['S pass or above in O/L English','or the ALTHIA English placement test'],
+      oth:['Mature applicants (21+) with health-sector work experience welcome','Admissions interview']}
+  ]}
+];
+
+(function(){
+  var $=function(s,r){return (r||document).querySelector(s)},$$=function(s,r){return [].slice.call((r||document).querySelectorAll(s))};
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var pad=function(n){return String(n).padStart(2,'0')};
+  var esc=function(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
+  var ICON={
+    acad:'<svg viewBox="0 0 24 24"><path d="M2 9l10-5 10 5-10 5L2 9zM6 11v5c3 2 9 2 12 0v-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>',
+    eng:'<svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4V5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>',
+    oth:'<svg viewBox="0 0 24 24"><path d="M9 4h6v3H9zM6 6h12v15H6zM9 12h6M9 16h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>'
+  };
+
+  /* ---------- entry requirements ---------- */
+  var tabs=$('#reqTabs'),panel=$('#reqPanel'),curArea=0;
+  tabs.innerHTML=REQ.map(function(a,i){
+    return '<button class="rt'+(i?'':' on')+'" role="tab" aria-selected="'+(i?'false':'true')+'" data-i="'+i+'"><span class="n">'+pad(i+1)+'</span><span class="t">'+a.t+'</span><span class="c">'+a.courses.length+' course'+(a.courses.length>1?'s':'')+'</span></button>';
+  }).join('')+'<p class="hint">Studied overseas or have other qualifications? <a href="mailto:reach@althia.lk?subject=Entry%20requirements">Ask us</a> and we\'ll check for you.</p>';
+  function rows(k,label,list){return '<div class="rr"><h4>'+ICON[k]+label+'</h4><ul>'+list.map(function(x){return '<li>'+esc(x)+'</li>'}).join('')+'</ul></div>'}
+  function showArea(i){
+    curArea=i;
+    $$('.rt',tabs).forEach(function(b,j){b.classList.toggle('on',j===i);b.setAttribute('aria-selected',j===i)});
+    panel.innerHTML=REQ[i].courses.map(function(c){
+      return '<article class="rc"><div class="rc-head"><div><div class="tags">'+c.tags.map(function(t){return '<span class="tag">'+esc(t)+'</span>'}).join('')+'</div><h3>'+esc(c.t)+'</h3></div>'+
+        '<button type="button" class="btn line" data-apply="'+REQ[i].id+'|'+c.id+'">Apply for this course <span class="ar">&rarr;</span></button></div>'+
+        '<div class="rc-rows">'+rows('acad','Academic',c.acad)+rows('eng','English',c.eng)+rows('oth','Also needed',c.oth)+'</div></article>';
+    }).join('');
+    panel.classList.remove('swap');void panel.offsetWidth;panel.classList.add('swap');
+  }
+  tabs.addEventListener('click',function(e){var b=e.target.closest('.rt');if(b&&+b.dataset.i!==curArea)showArea(+b.dataset.i)});
+  showArea(0);
+
+  /* ---------- form: course selects ---------- */
+  var form=$('#appForm'),area=$('#fArea'),course=$('#fCourse');
+  area.insertAdjacentHTML('beforeend',REQ.map(function(a){return '<option value="'+a.id+'">'+a.t+'</option>'}).join(''));
+  function fillCourses(){
+    var a=REQ.filter(function(x){return x.id===area.value})[0];
+    course.disabled=!a;
+    course.innerHTML=a?'<option value="">Select a course</option>'+a.courses.map(function(c){return '<option value="'+c.id+'">'+esc(c.t)+'</option>'}).join(''):'<option value="">Select an area first</option>';
+  }
+  area.addEventListener('change',fillCourses);
+  var yr=new Date().getFullYear(),ys='<option value="">Select a year</option>';
+  for(var y=yr+1;y>=yr-12;y--)ys+='<option>'+y+'</option>';
+  $('#fYear').innerHTML=ys;
+  function preselect(a,c){area.value=a;fillCourses();course.value=c;$$('.fld.err',form).forEach(function(f){if(f.contains(area)||f.contains(course))f.classList.remove('err')})}
+  /* "Apply for this course" buttons */
+  panel.addEventListener('click',function(e){
+    var b=e.target.closest('[data-apply]');if(!b)return;
+    var p=b.dataset.apply.split('|');preselect(p[0],p[1]);
+    $('#apply').scrollIntoView({behavior:reduce?'auto':'smooth'});
+  });
+  /* link from other pages: admissions.html?course=bsc-psychology#apply */
+  var qc=new URLSearchParams(location.search).get('course');
+  if(qc)REQ.forEach(function(a){a.courses.forEach(function(c){if(c.id===qc)preselect(a.id,c.id)})});
+
+  /* ---------- form: steps + validation ---------- */
+  var sets=$$('.fs',form),pgs=$$('.pg',form),step=0,maxStep=0,next=$('#nextBtn'),back=$('#backBtn');
+  function checkField(el){
+    var f=el.closest('.fld'),ok=true,v=(el.value||'').trim();
+    if(el.type==='checkbox')ok=!el.required||el.checked;
+    else if(el.required&&!v)ok=false;
+    else if(v&&el.type==='email')ok=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
+    else if(v&&el.name==='phone')ok=/^0?\d{9}$/.test(v.replace(/[\s-]/g,''));
+    if(f)f.classList.toggle('err',!ok);
+    return ok;
+  }
+  function validStep(i){
+    var bad=null;
+    $$('input,select,textarea',sets[i]).forEach(function(el){if(el.type==='file')return;if(!checkField(el)&&!bad)bad=el});
+    if(bad)bad.focus();
+    return !bad;
+  }
+  form.addEventListener('input',function(e){var f=e.target.closest('.fld');if(f&&f.classList.contains('err'))checkField(e.target)});
+  form.addEventListener('change',function(e){var f=e.target.closest('.fld');if(f&&f.classList.contains('err'))checkField(e.target)});
+  function go(i){
+    step=i;maxStep=Math.max(maxStep,i);
+    sets.forEach(function(s,j){s.classList.toggle('on',j===i)});
+    pgs.forEach(function(p,j){p.classList.toggle('on',j===i);p.classList.toggle('done',j<i||(j<=maxStep&&j!==i))});
+    back.hidden=i===0;
+    next.innerHTML=i===sets.length-1?'Submit application <span class="ar">&rarr;</span>':'Continue <span class="ar">&rarr;</span>';
+    $('#stepOf').textContent='Step '+(i+1)+' of '+sets.length;
+    var top=$('#apply').getBoundingClientRect().top;
+    if(top<0)$('#apply').scrollIntoView({behavior:reduce?'auto':'smooth'});
+    var first=$('input,select,textarea',sets[i]);if(first&&first.type!=='file')setTimeout(function(){first.focus({preventScroll:true})},50);
+  }
+  next.addEventListener('click',function(){
+    if(!validStep(step))return;
+    if(step<sets.length-1)go(step+1);else submit();
+  });
+  back.addEventListener('click',function(){go(step-1)});
+  $('#prog').addEventListener('click',function(e){var p=e.target.closest('.pg');if(!p)return;var t=+p.dataset.to;if(t<step||(t<=maxStep&&validStep(step)))go(t)});
+  form.addEventListener('keydown',function(e){if(e.key==='Enter'&&e.target.tagName!=='TEXTAREA'&&e.target.type!=='checkbox'){e.preventDefault();next.click()}});
+
+  /* ---------- form: file upload ---------- */
+  var files=[],fin=$('#fFiles'),drop=$('#drop'),flist=$('#fileList'),fmsg=$('#fileMsg'),MAX=5*1024*1024;
+  function kb(n){return n>1048576?(n/1048576).toFixed(1)+' MB':Math.max(1,Math.round(n/1024))+' KB'}
+  function addFiles(list){
+    var skipped=[];
+    [].forEach.call(list,function(f){
+      var okType=/\.(pdf|jpe?g|png)$/i.test(f.name);
+      if(!okType||f.size>MAX){skipped.push(f.name);return}
+      if(!files.some(function(x){return x.name===f.name&&x.size===f.size}))files.push(f);
+    });
+    fmsg.textContent=skipped.length?'Skipped '+skipped.length+' file'+(skipped.length>1?'s':'')+' (PDF, JPG or PNG up to 5 MB only).':'';
+    fmsg.parentNode.classList.toggle('err',!!skipped.length);
+    renderFiles();
+  }
+  function renderFiles(){
+    flist.innerHTML=files.map(function(f,i){var ext=(f.name.split('.').pop()||'').toUpperCase().slice(0,4);
+      return '<div class="file"><span class="ext">'+esc(ext)+'</span><span class="nm">'+esc(f.name)+'</span><span class="sz">'+kb(f.size)+'</span><button type="button" data-rm="'+i+'" aria-label="Remove '+esc(f.name)+'"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></div>'}).join('');
+  }
+  fin.addEventListener('change',function(){addFiles(fin.files);fin.value=''});
+  flist.addEventListener('click',function(e){var b=e.target.closest('[data-rm]');if(b){files.splice(+b.dataset.rm,1);renderFiles()}});
+  ['dragenter','dragover'].forEach(function(t){drop.addEventListener(t,function(e){e.preventDefault();drop.classList.add('over')})});
+  ['dragleave','drop'].forEach(function(t){drop.addEventListener(t,function(e){e.preventDefault();drop.classList.remove('over')})});
+  drop.addEventListener('drop',function(e){if(e.dataTransfer)addFiles(e.dataTransfer.files)});
+
+  /* ---------- form: submit ----------
+     Front end only. Connect to the real endpoint (CRM, apply portal or
+     WordPress form handler) inside this function. */
+  function submit(){
+    var data=new FormData(form);data.delete('documents');files.forEach(function(f){data.append('documents',f)});
+    next.disabled=true;next.textContent='Sending...';
+    setTimeout(function(){
+      var ref='ALT-'+String(yr+1).slice(2)+'-'+String(Math.floor(1000+Math.random()*9000));
+      var c=course.options[course.selectedIndex];
+      $('#doneRef').textContent=ref;
+      $('#doneMsg').textContent='Thank you, '+$('#fFirst').value.trim()+'. Your application for '+(c?c.text:'your course')+' is in. A copy is on its way to '+$('#fEmail').value.trim()+'.';
+      form.hidden=true;var d=$('#done');d.classList.add('on');d.focus({preventScroll:true});
+      $('#apply').scrollIntoView({behavior:reduce?'auto':'smooth'});
+      console.info('[ALTHIA] application (demo, not sent):',Object.fromEntries([].slice.call(data.entries()).map(function(p){return [p[0],p[1] instanceof File?p[1].name:p[1]]})));
+    },900);
+  }
+
+  /* ---------- images with gradient fallback ---------- */
+  $$('[data-img]').forEach(function(el){
+    var u=IMG[el.dataset.img];if(!u){el.classList.add('noimg');return}
+    var im=new Image();
+    im.onload=function(){el.style.setProperty('--img','url("'+u+'")')};
+    im.onerror=function(){el.classList.add('noimg');console.warn('[ALTHIA] image failed:',el.dataset.img)};
+    im.src=u;
+  });
+
+  /* ---------- header, menu, reveals, sticky bar, steps line ---------- */
+  var hdr=$('#hdr'),menuBtn=$('#menuBtn');
+  menuBtn.addEventListener('click',function(){var o=hdr.classList.toggle('open');menuBtn.setAttribute('aria-expanded',o)});
+  $$('#nav a').forEach(function(a){a.addEventListener('click',function(){hdr.classList.remove('open');menuBtn.setAttribute('aria-expanded','false')})});
+  $$('[data-soon]').forEach(function(a){a.addEventListener('click',function(e){e.preventDefault()})});
+  var els=$$('.rv');
+  if('IntersectionObserver' in window&&!reduce){
+    var io=new IntersectionObserver(function(en){en.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.15});
+    els.forEach(function(el){io.observe(el)});
+  }else els.forEach(function(el){el.classList.add('in')});
+  var links=$$('#fieldNav a'),secs=links.map(function(a){return $(a.getAttribute('href'))});
+  var sl=$('#stepsList'),line=$('.steps-line',sl),stepEls=$$('.step',sl);
+  function onScroll(){
+    hdr.classList.toggle('solid',scrollY>innerHeight*.4);
+    var c=-1,mid=innerHeight*.45;
+    secs.forEach(function(f,i){var r=f.getBoundingClientRect();if(r.top<mid&&r.bottom>mid)c=i});
+    links.forEach(function(a,i){a.classList.toggle('on',i===c)});
+    /* gradient line fills and step dots light up as you scroll */
+    var r=sl.getBoundingClientRect(),p=reduce?1:Math.max(0,Math.min(1,(innerHeight*.75-r.top)/(r.height*.9)));
+    line.style.setProperty('--p',p.toFixed(3));
+    stepEls.forEach(function(s,i){s.classList.toggle('on',p>=i/(stepEls.length-1)-.02)});
+  }
+  var t=false;
+  addEventListener('scroll',function(){if(!t){t=true;requestAnimationFrame(function(){t=false;onScroll()})}},{passive:true});
+  addEventListener('resize',onScroll);onScroll();
+})();
+</script>
+<script src="assets/v4.js"></script>
+</body>
+</html>

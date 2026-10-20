@@ -1,0 +1,909 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Insights | ALTHIA Health Uni</title>
+<meta name="description" content="News, events and research from ALTHIA.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+
+/* Tokens taken from the "Homepage — Final Design" Figma frame */
+:root{
+  --bg:#FAFAF8; --white:#FFFFFF; --mist:#F2EFF7;
+  --ink:#15121C; --ink2:#463F52; --ink3:#6B6577;
+  --line:rgba(21,18,28,.10);
+  --purple:#653092; --blue:#2670B8; --green:#1BB680;
+  --grad:linear-gradient(100deg,#653092 0%,#2670B8 55%,#1BB680 100%);
+  --gutter:clamp(16px,4vw,56px); --maxw:1328px;
+  --r:12px;
+  --display:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --body:'Figtree',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --ease:cubic-bezier(.22,.8,.24,1);
+  color-scheme:light;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;overflow-x:clip}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1rem/1.6 var(--body);-webkit-font-smoothing:antialiased;overflow-x:clip}
+body.lock{overflow:hidden}
+h1,h2,h3,p,ul,ol,figure{margin:0;padding:0}
+ul,ol{list-style:none}
+a{color:inherit;text-decoration:none}
+img,svg{max-width:100%}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:6px}
+[id]{scroll-margin-top:150px}
+.container{width:100%;max-width:calc(var(--maxw) + 2*var(--gutter));margin-inline:auto;padding-inline:var(--gutter)}
+.eyebrow{font:700 .75rem/1 var(--display);letter-spacing:.16em;text-transform:uppercase;color:var(--purple)}
+.mix{font:400 clamp(1.9rem,3.2vw,2.6rem)/1.15 var(--display);letter-spacing:-.02em;text-wrap:balance}
+.mix b{font-weight:800}
+
+/* image slots: filled by JS from the IMG map; gradient fallback if a photo fails */
+[data-img]{background-color:#2a2433}
+[data-img].noimg{background-image:var(--grad)!important}
+
+/* ---------- header ---------- */
+.hdr{position:fixed;inset:0 0 auto 0;z-index:50;height:80px;background:rgba(21,18,28,.27);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);transition:background .4s}
+.hdr.solid{background:rgba(21,18,28,.86)}
+.hdr-in{height:100%;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.logo{display:block;line-height:0;color:#fff}
+.logo svg{height:28px;width:auto}
+.nav{display:flex;align-items:center;gap:clamp(18px,2.6vw,38px)}
+.nav a{font:500 .82rem/1 var(--display);letter-spacing:.01em;color:rgba(255,255,255,.92);padding-block:8px;background:linear-gradient(#fff,#fff) left bottom/0 1.5px no-repeat;transition:background-size .4s var(--ease)}
+.nav a:hover,.nav a[aria-current="page"]{background-size:100% 1.5px;color:#fff}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:38px;padding:0 22px;border-radius:999px;border:0;cursor:pointer;font:700 .82rem/1 var(--display);color:#fff;background:var(--grad);background-size:180% 100%;background-position:0 0;transition:background-position .6s var(--ease),box-shadow .5s var(--ease),transform .4s var(--ease);white-space:nowrap}
+.btn:hover{background-position:100% 0;box-shadow:0 14px 30px -14px rgba(38,112,184,.8);transform:translateY(-1px)}
+.btn.lg{height:48px;padding:0 26px;font-size:.88rem}
+.btn .ar{transition:transform .4s var(--ease)}
+.btn:hover .ar{transform:translateX(4px)}
+.btn.ghost{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.55)}
+.btn.ghost:hover{background:rgba(255,255,255,.18);box-shadow:none}
+.menu-btn{display:none;width:42px;height:42px;border-radius:999px;border:1px solid rgba(255,255,255,.4);background:transparent;color:#fff;cursor:pointer;align-items:center;justify-content:center}
+.menu-btn span,.menu-btn span::before,.menu-btn span::after{display:block;width:16px;height:1.5px;background:#fff;position:relative;transition:transform .3s}
+.menu-btn span::before,.menu-btn span::after{content:"";position:absolute;left:0}
+.menu-btn span::before{top:-5px}.menu-btn span::after{top:5px}
+.hdr.open .menu-btn span{background:transparent}
+.hdr.open .menu-btn span::before{transform:translateY(5px) rotate(45deg)}
+.hdr.open .menu-btn span::after{transform:translateY(-5px) rotate(-45deg)}
+@media (max-width:980px){
+  .menu-btn{display:inline-flex}
+  .hdr .btn{display:none}
+  .nav{position:absolute;top:80px;left:0;right:0;flex-direction:column;align-items:stretch;gap:0;padding:8px var(--gutter) 20px;background:rgba(21,18,28,.96);display:none}
+  .hdr.open .nav{display:flex}
+  .nav a{padding:15px 0;border-bottom:1px solid rgba(255,255,255,.1);font-size:.95rem;background:none}
+}
+
+/* ---------- banner ---------- */
+.ban{position:relative;height:clamp(360px,52vh,460px);display:flex;align-items:flex-end;color:#fff;overflow:hidden;background:var(--ink)}
+.ban-img{position:absolute;inset:0;background:var(--img) center 50%/cover no-repeat;transform:scale(1.08);animation:kb 14s var(--ease) forwards}
+@keyframes kb{to{transform:scale(1)}}
+.ban::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(21,18,28,.85) 0%,rgba(21,18,28,.5) 50%,rgba(21,18,28,.2) 100%),linear-gradient(0deg,rgba(21,18,28,.55),transparent 55%)}
+.emblem{position:absolute;right:-60px;bottom:-140px;width:min(520px,60vw);height:auto;color:#fff;opacity:.08;z-index:1;pointer-events:none}
+.ban .container{position:relative;z-index:2;padding-top:80px;padding-bottom:clamp(36px,5vw,56px)}
+.crumb{display:flex;align-items:center;gap:10px;font-size:.84rem;color:rgba(255,255,255,.72);margin-bottom:16px}
+.crumb a:hover{color:#fff}
+.crumb i{width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.6)}
+.ban h1{font:400 clamp(2.4rem,4.8vw,3.9rem)/1.02 var(--display);letter-spacing:-.02em}
+.ban h1 b{font-weight:800}
+.ban h1 .ln{display:block;overflow:hidden;padding-bottom:.08em}
+.ban h1 .ln>span{display:inline-block;transform:translateY(105%);animation:up 1s var(--ease) forwards}
+.ban h1 .ln:nth-child(2)>span{animation-delay:.1s}
+@keyframes up{to{transform:none}}
+.ban p.sub{margin-top:14px;max-width:34rem;font-size:1rem;color:rgba(255,255,255,.85)}
+
+/* ---------- sticky "on this page" bar ---------- */
+.fieldnav{position:sticky;top:80px;z-index:30;background:rgba(250,250,248,.9);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.fn-in{display:flex;align-items:center;gap:8px;height:64px;overflow-x:auto;scrollbar-width:none}
+.fn-in::-webkit-scrollbar{display:none}
+.fn-in .lbl{font:700 .7rem/1 var(--display);letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin-right:10px;white-space:nowrap}
+.fn-in a{display:inline-flex;align-items:center;height:38px;padding:0 16px;border-radius:999px;font:600 .84rem/1 var(--display);color:var(--ink2);white-space:nowrap;transition:color .3s,background .3s}
+.fn-in a:hover{background:var(--mist);color:var(--ink)}
+.fn-in a.on{color:#fff;background:var(--ink)}
+
+/* ---------- shared section bits ---------- */
+.sec{padding-block:clamp(72px,9vw,120px)}
+.sec.white{background:var(--white)}
+.sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:clamp(32px,4vw,52px)}
+.sec-head .mix{margin-top:14px;max-width:38rem}
+.sec-head p.lead{max-width:26rem;color:var(--ink2);font-size:.97rem}
+.tag{display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:999px;font:700 .64rem/1 var(--display);letter-spacing:.1em;text-transform:uppercase;background:var(--mist);color:var(--purple)}
+.go{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;flex:none;background:transparent;cursor:pointer;transition:background .4s,border-color .4s,color .4s,transform .5s var(--ease)}
+.go svg{width:16px;height:16px}
+
+/* ---------- apply band ---------- */
+.cta{position:relative;overflow:hidden;background:var(--ink);color:#fff;padding-block:clamp(64px,8vw,100px)}
+.cta::before{content:"";position:absolute;width:640px;height:640px;right:-160px;top:-260px;border-radius:50%;background:var(--grad);filter:blur(120px);opacity:.35}
+.cta .container{position:relative;display:flex;align-items:flex-end;justify-content:space-between;gap:32px;flex-wrap:wrap}
+.cta .mix{font-size:clamp(2rem,3.6vw,3rem)}
+.cta p{margin-top:14px;color:rgba(255,255,255,.7);max-width:30rem}
+.cta .acts{display:flex;gap:12px;flex-wrap:wrap}
+.cta+.ftr{border-top:1px solid rgba(255,255,255,.08)}
+
+/* ---------- footer ---------- */
+.ftr{position:relative;background:var(--ink);color:#fff;overflow:hidden;padding-top:64px}
+.ftr .emblem{right:-80px;bottom:-200px;width:620px;opacity:.06}
+.ftr-grid{position:relative;z-index:1;display:grid;grid-template-columns:1.6fr 1fr 1.2fr 1fr;gap:40px}
+.ftr .logo svg{height:20px}
+.ftr p.pitch{margin-top:18px;max-width:17rem;font-size:.85rem;line-height:1.6;color:rgba(255,255,255,.55)}
+.ftr h4{margin:0 0 16px;font:600 .8rem/1 var(--display);letter-spacing:.08em;text-transform:uppercase}
+.ftr li{margin-bottom:10px;font-size:.85rem;color:rgba(255,255,255,.6)}
+.ftr li a{transition:color .3s}
+.ftr li a:hover{color:#fff}
+.ftr-base{position:relative;z-index:1;margin-top:48px;padding-block:22px;border-top:1px solid rgba(255,255,255,.1);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px 24px;font-size:.75rem;color:rgba(255,255,255,.4)}
+.ftr-base a:hover{color:#fff}
+@media (max-width:860px){.ftr-grid{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){.ftr-grid{grid-template-columns:1fr}}
+
+.rv{opacity:0;transform:translateY(26px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.rv.in{opacity:1;transform:none}
+.rv.d1{transition-delay:.08s}.rv.d2{transition-delay:.16s}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition-duration:.01ms!important}
+  .rv{opacity:1;transform:none}
+  .ban h1 .ln>span{transform:none}
+  .grow-box{clip-path:inset(0 round 12px)}.grow-cap{opacity:1}
+}
+
+
+/* ---------- insight cards (shared: landing grid + related) ---------- */
+.ic{position:relative;display:flex;flex-direction:column;border-radius:var(--r);background:var(--white);border:1px solid var(--line);overflow:hidden;transition:box-shadow .5s var(--ease),transform .5s var(--ease),border-color .5s}
+.ic:hover{box-shadow:0 30px 60px -36px rgba(21,18,28,.4);transform:translateY(-4px);border-color:transparent}
+.ic-img{position:relative;aspect-ratio:16/10;overflow:hidden;background:var(--ink)}
+.ic-img>div{position:absolute;inset:0;background:var(--img) center/cover no-repeat;transition:transform 1.2s var(--ease)}
+.ic:hover .ic-img>div{transform:scale(1.06)}
+.ic-img .dt{position:absolute;left:14px;top:14px;z-index:1;width:58px;padding:9px 0 8px;border-radius:10px;background:#fff;color:var(--ink);text-align:center;font:700 .66rem/1 var(--display);letter-spacing:.14em;text-transform:uppercase}
+.ic-img .dt b{display:block;font:800 1.5rem/1 var(--display);letter-spacing:-.03em;margin-bottom:4px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ic-img .st{position:absolute;right:14px;top:14px;z-index:1;display:inline-flex;align-items:center;gap:7px;height:26px;padding:0 11px;border-radius:999px;background:rgba(21,18,28,.6);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:#fff;font:700 .64rem/1 var(--display);letter-spacing:.1em;text-transform:uppercase}
+.ic-img .st.up::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px rgba(27,182,128,.3)}
+.ic-body{display:flex;flex-direction:column;flex:1;padding:32px 26px 30px}
+.ic-top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px}
+.ic-top .ar-t{font:600 .74rem/1.2 var(--body);color:var(--ink3)}
+.tag.ev{background:rgba(27,182,128,.12);color:#0f7d57}
+.ic h3{margin-top:14px;font:800 1.02rem/1.32 var(--display);text-transform:uppercase;letter-spacing:-.005em;transition:color .4s}
+.ic:hover h3{color:var(--purple)}
+.ic .ex{margin-top:10px;font-size:.9rem;line-height:1.55;color:var(--ink2);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ic-foot{margin-top:auto;padding-top:18px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 14px;font:600 .76rem/1.3 var(--body);color:var(--ink3)}
+/* research card: no photo, typographic */
+.ic-r{padding:32px 28px 30px;background:var(--bg);min-height:100%}
+.ic-r::before{content:"";position:absolute;left:0;top:0;right:0;height:3px;background:var(--grad);transform:scaleX(0);transform-origin:left;transition:transform .7s var(--ease)}
+.ic-r:hover::before{transform:none}
+.ic-r h3{font:700 1.14rem/1.35 var(--display);text-transform:none;letter-spacing:-.01em;margin-top:22px}
+.ic-r .by{margin-top:16px;display:flex;align-items:center;gap:10px;font-size:.86rem;color:var(--ink2)}
+.av{flex:none;width:30px;height:30px;border-radius:50%;background:var(--grad);color:#fff;display:grid;place-items:center;font:800 .66rem/1 var(--display);letter-spacing:.02em}
+.ic-r .ic-foot{align-items:center;padding-top:24px}
+.ic-r .more{display:inline-flex;align-items:center;gap:8px;font:700 .8rem/1 var(--display);color:var(--purple)}
+.ic-r .more svg{width:14px;height:14px;transition:transform .4s var(--ease)}
+.ic-r:hover .more svg{transform:translateX(4px)}
+.ic-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+@media (max-width:1020px){.ic-grid{grid-template-columns:1fr 1fr}}
+@media (max-width:640px){.ic-grid{grid-template-columns:1fr}}
+
+/* social buttons (follow band + share) */
+.soc{display:flex;flex-wrap:wrap;gap:10px}
+.soc a,.soc button{display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 20px 0 16px;border-radius:999px;border:1px solid rgba(255,255,255,.4);background:rgba(255,255,255,.06);color:#fff;font:700 .84rem/1 var(--display);cursor:pointer;transition:background .4s,border-color .4s,transform .4s var(--ease)}
+.soc a:hover{background:#fff;color:var(--ink);border-color:#fff;transform:translateY(-2px)}
+.soc svg{width:18px;height:18px}
+
+
+/* reading progress */
+.rprog{position:fixed;left:0;right:0;top:80px;z-index:49;height:3px;pointer-events:none}
+.rprog i{display:block;height:100%;width:100%;background:var(--grad);transform-origin:left;transform:scaleX(0)}
+
+/* ---------- 1. title block (dark) ---------- */
+.ahead{position:relative;overflow:hidden;background:var(--ink);color:#fff;padding:calc(80px + clamp(40px,6vw,72px)) 0 clamp(170px,18vw,230px)}
+.ahead::before{content:"";position:absolute;width:760px;height:760px;right:-240px;top:-360px;border-radius:50%;background:var(--grad);filter:blur(150px);opacity:.32}
+.ahead .emblem{right:-70px;bottom:-120px;width:min(460px,55vw);opacity:.06}
+.ahead .container{position:relative;z-index:2}
+.ahead .in{max-width:900px}
+.ahead .crumb{margin-bottom:26px}
+.ahead .tags{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.ahead .tags .tag{background:rgba(255,255,255,.12);color:#fff}
+.ahead .tags .tag.g{background:var(--grad)}
+.ahead .tags a.tag:hover{background:rgba(255,255,255,.24)}
+.ahead h1{margin-top:20px;font:800 clamp(2rem,4.4vw,3.5rem)/1.06 var(--display);letter-spacing:-.025em;text-wrap:balance}
+.ahead h1 .w{display:inline-block;opacity:0;transform:translateY(.5em);animation:wd .9s var(--ease) forwards}
+@keyframes wd{to{opacity:1;transform:none}}
+.ahead .stand{margin-top:18px;max-width:42rem;font-size:clamp(1rem,1.3vw,1.12rem);line-height:1.6;color:rgba(255,255,255,.78)}
+.ameta{margin-top:30px;display:flex;flex-wrap:wrap;align-items:center;gap:12px 28px;font-size:.86rem;color:rgba(255,255,255,.72)}
+.ameta .who{display:flex;align-items:center;gap:12px;color:#fff;font-weight:600}
+.ameta .who .av{width:38px;height:38px;font-size:.74rem}
+.ameta .who small{display:block;font-weight:400;color:rgba(255,255,255,.6);font-size:.78rem}
+.ameta .mi{display:inline-flex;align-items:center;gap:8px}
+.ameta svg{width:16px;height:16px;opacity:.75}
+
+/* ---------- 2. image ---------- */
+.ahero{position:relative;z-index:3;margin-top:calc(-1 * clamp(130px,14vw,180px))}
+.ahero figure{max-width:1180px;margin-inline:auto}
+.ahero .ph{position:relative;aspect-ratio:21/9;border-radius:var(--r);overflow:hidden;background:#2a2433;box-shadow:0 40px 80px -40px rgba(21,18,28,.5)}
+.ahero .ph div{position:absolute;inset:-6% 0;background:var(--img) center/cover no-repeat;will-change:transform}
+.ahero figcaption{margin-top:12px;font-size:.8rem;color:var(--ink3)}
+@media (max-width:640px){.ahero .ph{aspect-ratio:4/3}}
+
+/* ---------- 3. write-up ---------- */
+.abody{display:grid;grid-template-columns:56px minmax(0,700px) 300px;justify-content:center;gap:clamp(28px,4vw,56px);padding-block:clamp(48px,6vw,80px) clamp(72px,8vw,110px)}
+.rail{position:sticky;top:176px;align-self:start;display:flex;flex-direction:column;align-items:center;gap:10px}
+.rail .lbl{writing-mode:vertical-rl;transform:rotate(180deg);font:700 .66rem/1 var(--display);letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);margin-bottom:6px}
+.sh{position:relative;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--white);color:var(--ink2);display:grid;place-items:center;cursor:pointer;transition:background .35s,color .35s,border-color .35s,transform .4s var(--ease)}
+.sh svg{width:17px;height:17px}
+.sh:hover{background:var(--ink);color:#fff;border-color:var(--ink);transform:translateY(-2px)}
+.sh .tip{position:absolute;left:calc(100% + 10px);top:50%;transform:translate(-4px,-50%);white-space:nowrap;height:28px;display:flex;align-items:center;padding:0 10px;border-radius:6px;background:var(--ink);color:#fff;font:600 .72rem/1 var(--display);opacity:0;pointer-events:none;transition:opacity .25s,transform .3s var(--ease)}
+.sh:hover .tip,.sh:focus-visible .tip{opacity:1;transform:translate(0,-50%)}
+
+.prose{font-size:1.04rem;line-height:1.75;color:var(--ink2)}
+.prose>*+*{margin-top:1.15em}
+.prose p.lead{font:500 clamp(1.14rem,1.5vw,1.26rem)/1.6 var(--body);color:var(--ink)}
+.prose p.lead::first-letter{float:left;font:800 3.6em/.82 var(--display);margin:.06em .1em 0 0;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.prose h2{margin-top:1.9em;font:800 clamp(1.2rem,1.7vw,1.42rem)/1.25 var(--display);text-transform:uppercase;letter-spacing:-.005em;color:var(--ink)}
+.prose ul,.prose ol{display:grid;gap:10px}
+.prose ul li{position:relative;padding-left:26px}
+.prose ul li::before{content:"";position:absolute;left:4px;top:.68em;width:8px;height:8px;border-radius:50%;background:var(--grad)}
+.prose ol{counter-reset:k}
+.prose ol li{counter-increment:k;display:grid;grid-template-columns:44px 1fr;gap:14px;align-items:start;padding:16px 18px;border-radius:var(--r);background:var(--white);border:1px solid var(--line);color:var(--ink)}
+.prose ol li::before{content:"0" counter(k);font:800 1.3rem/1 var(--display);letter-spacing:-.03em;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;padding-top:2px}
+.prose blockquote{margin:2em 0;padding:4px 0 4px 26px;border-left:3px solid;border-image:var(--grad) 1}
+.prose blockquote p{font:600 clamp(1.2rem,1.9vw,1.5rem)/1.4 var(--display);letter-spacing:-.01em;color:var(--ink)}
+.prose blockquote cite{display:block;margin-top:12px;font:700 .72rem/1.3 var(--display);letter-spacing:.14em;text-transform:uppercase;font-style:normal;color:var(--purple)}
+.abox{padding:24px 26px;border-radius:var(--r);background:var(--mist)}
+.abox h3{font:700 .72rem/1 var(--display);letter-spacing:.16em;text-transform:uppercase;color:var(--purple);margin-bottom:12px}
+.abox p{color:var(--ink);font-size:1rem}
+.kw{display:flex;flex-wrap:wrap;gap:6px}
+
+.aend{margin-top:48px;padding-top:28px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:18px}
+.aend .shr{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+.aend .shr b{font:700 .74rem/1 var(--display);letter-spacing:.14em;text-transform:uppercase;color:var(--ink);margin-right:8px}
+.aend .shr .sh .tip{left:50%;top:auto;bottom:calc(100% + 8px);transform:translate(-50%,4px)}
+.aend .shr .sh:hover .tip{transform:translate(-50%,0)}
+.back{display:inline-flex;align-items:center;gap:10px;font:700 .84rem/1 var(--display);color:var(--ink)}
+.back svg{width:15px;height:15px;transform:rotate(180deg);transition:transform .4s var(--ease)}
+.back:hover{color:var(--purple)}
+.back:hover svg{transform:rotate(180deg) translateX(4px)}
+
+/* aside cards */
+.side{position:sticky;top:176px;align-self:start;display:grid;gap:16px}
+.box{border-radius:var(--r);background:var(--white);border:1px solid var(--line);overflow:hidden}
+.box-h{position:relative;overflow:hidden;padding:22px 22px 20px;background:var(--ink);color:#fff}
+.box-h::before{content:"";position:absolute;width:260px;height:260px;right:-90px;top:-130px;border-radius:50%;background:var(--grad);filter:blur(50px);opacity:.7}
+.box-h>*{position:relative}
+.box-h small{display:block;font:700 .66rem/1 var(--display);letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.65)}
+.box-h .big{display:flex;align-items:baseline;gap:10px;margin-top:12px;font:800 2.6rem/1 var(--display);letter-spacing:-.04em}
+.box-h .big span{font:600 .9rem/1.2 var(--display);letter-spacing:0;color:rgba(255,255,255,.8)}
+.box-h .cd{margin-top:14px;display:inline-flex;align-items:center;gap:8px;height:28px;padding:0 12px;border-radius:999px;background:rgba(255,255,255,.12);font:700 .72rem/1 var(--display)}
+.box-h .cd i{width:7px;height:7px;border-radius:50%;background:var(--green)}
+.box-h .cd.past i{background:rgba(255,255,255,.5)}
+.box-h h3{margin-top:10px;font:800 1.1rem/1.25 var(--display);text-transform:uppercase}
+.rows{padding:6px 22px}
+.rows div{display:grid;grid-template-columns:22px 1fr;gap:12px;padding:14px 0;border-bottom:1px solid var(--line);font-size:.9rem;color:var(--ink)}
+.rows div:last-child{border-bottom:0}
+.rows svg{width:18px;height:18px;color:var(--purple);margin-top:2px}
+.rows small{display:block;font:700 .64rem/1.4 var(--display);letter-spacing:.14em;text-transform:uppercase;color:var(--ink3)}
+.box-a{display:grid;gap:8px;padding:4px 22px 22px}
+.box-a .btn{width:100%;height:46px}
+.btn.line{background:transparent;color:var(--ink);border:1px solid rgba(21,18,28,.22)}
+.btn.line:hover{background:var(--ink);color:#fff;border-color:var(--ink);box-shadow:none}
+.btn.line svg{width:16px;height:16px}
+.box p.pad{padding:18px 22px 6px;font-size:.9rem;color:var(--ink2)}
+.fol{padding:18px 22px 22px}
+.fol small{display:block;font:700 .66rem/1 var(--display);letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);margin-bottom:12px}
+.fol .ico{display:flex;gap:8px}
+
+@media (max-width:1100px){
+  .abody{grid-template-columns:56px minmax(0,1fr);}
+  .side{position:static;grid-column:2;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+}
+@media (max-width:760px){
+  .abody{grid-template-columns:minmax(0,1fr);gap:28px}
+  .rail{position:static;flex-direction:row;justify-content:flex-start;flex-wrap:wrap;grid-row:1}
+  .rail .lbl{writing-mode:horizontal-tb;transform:none;margin:0 6px 0 0}
+  .rail .sh .tip{display:none}
+  .side{grid-column:1}
+  .abody[data-type="event"] .side,.abody[data-type="research"] .side{grid-row:2}
+  .side .box+.box{display:none}
+}
+
+/* related */
+.rel .sec-head{margin-bottom:clamp(28px,3vw,40px)}
+.btn.lg.line{height:48px}
+
+.toast{position:fixed;left:50%;bottom:28px;z-index:90;transform:translate(-50%,20px);display:flex;align-items:center;gap:10px;height:46px;padding:0 20px;border-radius:999px;background:var(--ink);color:#fff;font:700 .84rem/1 var(--display);opacity:0;pointer-events:none;transition:opacity .3s,transform .4s var(--ease);box-shadow:0 20px 40px -20px rgba(21,18,28,.6)}
+.toast i{width:8px;height:8px;border-radius:50%;background:var(--green)}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+</style>
+<link rel="stylesheet" href="assets/v4.css">
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="logo" viewBox="0 0 485 77"><g fill="currentColor">
+      <path d="M128.13 0.01H126.62V76.32H128.13V0.01Z"/>
+      <path d="M107.24 76.33H84.69L69.01 60.64C62.07 70.15 50.84 76.33 38.16 76.33C16.99 76.33 -0.16 59.08 0 37.88C0.16 16.94 17.39 -0.08 38.34 0.01C50.95 0.07 62.12 6.25 69.02 15.73L84.71 0.01H107.29L75.75 31.61L69.18 38.19L57.89 26.88L54.24 23.22C50.09 18.76 44.12 16.03 37.51 16.22C25.91 16.56 16.5 26.02 16.21 37.62C15.91 49.99 25.85 60.12 38.16 60.12C44.1 60.12 49.49 57.76 53.44 53.93H53.47L57.89 49.5L69.18 38.19L75.74 44.77L107.23 76.33H107.24Z"/>
+      <path d="M38.52 28.8C37.94 37.11 37.48 37.58 29.16 38.15C37.47 38.73 37.94 39.19 38.51 47.51C39.06 39.58 39.52 38.79 46.77 38.24L56.03 38.32C56.03 38.32 56.11 38.28 56.11 38.24C56.11 38.2 56.07 38.16 56.03 38.16L46.77 38.08C39.52 37.52 39.07 36.73 38.53 28.8H38.52Z"/>
+      <path d="M271.37 61.45V76.3H226.53V0H241.48V61.44H271.37V61.45Z"/>
+      <path d="M312.97 14.82H294.7V76.31H279.71V14.82H261.4V0.01H312.97V14.82Z"/>
+      <path d="M377.88 0.01V76.31H362.98V46.51H336.27V76.31H321.37V0.01H336.27V29.76H362.98V0.01H377.88Z"/>
+      <path d="M390.8 0.01H405.75V76.31H390.8V0.01Z"/>
+      <path d="M183.54 0.1H183.07L167.59 33.32H175.34L164.65 39.63L147.56 76.31H163.7L174.26 53.2L183.35 33.32L192.39 53.2L198.2 65.93L202.91 76.31H219.1L183.54 0.1Z"/>
+      <path d="M448.84 0.1H448.38L432.9 33.32H440.64L429.95 39.63L412.86 76.31H429L439.57 53.2L448.65 33.32L457.69 53.2L463.51 65.93L468.21 76.31H484.4L448.84 0.1Z"/>
+    </g></symbol>
+    <symbol id="emblem" viewBox="0 0 108 77"><g fill="currentColor">
+      <path d="M107.24 76.31H84.69L69.01 60.62C62.07 70.13 50.84 76.31 38.16 76.31C16.99 76.31 -.16 59.07 0 37.87C.16 16.92 17.4-.1 38.34 0C50.95.06 62.12 6.24 69.02 15.72L84.71 0H107.29L75.75 31.6L69.18 38.18L57.89 26.87L54.24 23.21C50.09 18.75 44.12 16.02 37.51 16.21C25.91 16.55 16.5 26.01 16.21 37.61C15.91 49.98 25.85 60.11 38.16 60.11C44.1 60.11 49.49 57.75 53.44 53.92H53.47L57.89 49.49L69.18 38.18L75.74 44.76L107.23 76.32Z"/>
+      <path d="M38.52 28.78C37.94 37.09 37.48 37.56 29.16 38.13C37.47 38.71 37.94 39.17 38.51 47.49C39.06 39.56 39.52 38.77 46.77 38.22L56.03 38.3C56.11 38.26 56.07 38.14 56.03 38.14L46.77 38.06C39.52 37.5 39.07 36.71 38.53 28.78Z"/>
+    </g></symbol>
+    <symbol id="arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  </defs>
+</svg>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-ig" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r=".6" fill="currentColor"/></g></symbol>
+    <symbol id="i-fb" viewBox="0 0 24 24"><path fill="currentColor" d="M13.5 21v-7.6h2.6l.4-3h-3V8.5c0-.9.3-1.5 1.5-1.5h1.6V4.3c-.3 0-1.2-.1-2.3-.1-2.3 0-3.9 1.4-3.9 4v2.2H7.8v3h2.6V21h3.1z"/></symbol>
+    <symbol id="i-tt" viewBox="0 0 24 24"><path fill="currentColor" d="M16.6 3h-3.1v12.2a2.7 2.7 0 1 1-2.7-2.7c.3 0 .5 0 .8.1V9.4a5.8 5.8 0 1 0 5 5.8V9a7.3 7.3 0 0 0 4.3 1.4V7.3A4.3 4.3 0 0 1 16.6 3z"/></symbol>
+    <symbol id="i-in" viewBox="0 0 24 24"><path fill="currentColor" d="M6.9 8.8H3.8V20h3.1V8.8zM5.3 3.5a1.8 1.8 0 1 0 0 3.6 1.8 1.8 0 0 0 0-3.6zM20.2 13.6c0-3-1.6-5-4.3-5-1.4 0-2.3.7-2.8 1.4V8.8H10V20h3.1v-5.9c0-1.6.6-2.6 1.9-2.6 1.3 0 1.9 1 1.9 2.6V20h3.2v-6.4z"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path fill="currentColor" d="M17.6 3.5h3l-6.6 7.5 7.8 9.5h-6.1l-4.8-5.9-5.4 5.9h-3l7-7.9L2 3.5h6.2l4.3 5.4 5.1-5.4zm-1 15.3h1.7L7.5 5.1H5.7l10.9 13.7z"/></symbol>
+    <symbol id="i-wa" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.5a9.4 9.4 0 0 0-8.1 14.2L2.6 21.5l4.9-1.3A9.4 9.4 0 1 0 12 2.5zm0 17.2c-1.5 0-2.9-.4-4.1-1.1l-.3-.2-2.9.8.8-2.8-.2-.3A7.8 7.8 0 1 1 12 19.7zm4.3-5.8c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.5.1l-.7.9c-.1.2-.3.2-.5.1a6.4 6.4 0 0 1-3.2-2.8c-.2-.4.2-.4.7-1.2.1-.1 0-.3 0-.4l-.7-1.7c-.2-.5-.4-.4-.5-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 2s.8 2.3.9 2.4c.1.2 1.6 2.5 4 3.5 1.5.6 2 .7 2.8.6.4-.1 1.4-.6 1.6-1.1.2-.5.2-1 .1-1.1l-.5-.4z"/></symbol>
+    <symbol id="i-link" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></g></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></g></symbol>
+    <symbol id="i-cal" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></g></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/></g></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></g></symbol>
+    <symbol id="i-dl" viewBox="0 0 24 24"><path d="M12 4v11m0 0l-4.5-4.5M12 15l4.5-4.5M5 19.5h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  </defs>
+</svg>
+
+
+<header class="hdr" id="hdr">
+  <div class="container hdr-in">
+    <a class="logo" href="index.html" aria-label="ALTHIA home"><img src="assets/img/althia-logo.svg" alt="ALTHIA — SLIIT-Hemas Health Uni"></a>
+    <nav class="nav" id="nav" aria-label="Main">
+      <a href="about-us.html">About</a>
+      <a href="programmes.html">Programmes</a>
+      <a href="campus-facilities.html">Campus</a>
+      <a href="admissions.html">Admissions</a>
+      <a href="insights.html" aria-current="page">Insights</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <a class="btn" href="https://apply.sliit.lk/" target="_blank" rel="noopener">Apply Now</a>
+    <button class="menu-btn" id="menuBtn" aria-label="Menu" aria-expanded="false"><span></span></button>
+  </div>
+</header>
+<div class="rprog" aria-hidden="true"><i id="rprog"></i></div>
+
+<main id="top">
+
+<!-- 1. TITLE -->
+<section class="ahead">
+  <svg class="emblem" viewBox="0 0 108 77" aria-hidden="true"><use href="#emblem"/></svg>
+  <div class="container"><div class="in" id="head"></div></div>
+</section>
+
+<!-- 2. IMAGE -->
+<div class="ahero container"><figure><div class="ph"><div id="heroImg" role="img"></div></div><figcaption id="cap"></figcaption></figure></div>
+
+<!-- 3. WRITE-UP -->
+<div class="container">
+  <div class="abody" id="abody">
+    <div class="rail" aria-label="Share this post"><span class="lbl">Share</span><div class="shares" style="display:contents"></div></div>
+    <article class="prose" id="prose"></article>
+    <aside class="side" id="side"></aside>
+  </div>
+</div>
+
+<!-- 4. RELATED -->
+<section class="sec white rel">
+  <div class="container">
+    <div class="sec-head rv">
+      <div><span class="eyebrow" id="relEy">Keep reading</span><h2 class="mix">More from <b>Insights.</b></h2></div>
+      <a class="btn lg line" id="relAll" href="insights.html">All insights <span class="ar">&rarr;</span></a>
+    </div>
+    <div class="ic-grid" id="rel"></div>
+  </div>
+</section>
+
+<!-- FOLLOW BAND -->
+<section class="cta">
+  <div class="container">
+    <div class="rv">
+      <h2 class="mix">Enjoyed this? <b>Follow ALTHIA.</b></h2>
+      <p>Campus news, event reminders and student life, every week.</p>
+    </div>
+    <div class="soc rv d1">
+      <a href="https://www.instagram.com/althia_lk" target="_blank" rel="noopener"><svg><use href="#i-ig"/></svg>Instagram</a>
+      <a href="https://www.facebook.com/profile.php?id=61585632940458" target="_blank" rel="noopener"><svg><use href="#i-fb"/></svg>Facebook</a>
+      <a href="https://www.tiktok.com/@sliit_hemas" target="_blank" rel="noopener"><svg><use href="#i-tt"/></svg>TikTok</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="ftr" id="contact">
+  <svg class="emblem" viewBox="0 0 108 77" aria-hidden="true"><use href="#emblem"/></svg>
+  <div class="container">
+    <div class="ftr-grid">
+      <div>
+        <a class="logo" href="index.html" aria-label="ALTHIA home"><img src="assets/img/althia-logo-white.svg" alt="ALTHIA — SLIIT-Hemas Health Uni"></a>
+        <p class="pitch">A health sciences university college shaping Sri Lanka's next generation of clinicians, carers and researchers.</p>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <ul><li><a href="programmes.html">Programmes</a></li><li><a href="short-courses.html">Short Courses</a></li><li><a href="campus-facilities.html">Campus &amp; Facilities</a></li><li><a href="about-us.html">About Althia</a></li><li><a href="admissions.html">Admissions</a></li><li><a href="insights.html">Insights</a></li><li><a href="https://apply.sliit.lk/" target="_blank" rel="noopener">Apply Now</a></li></ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul><li>SLIIT Malabe Campus,<br>New Kandy Road, Malabe</li><li>+94 11 754 4801</li><li>+94 76 330 6603</li><li>reach@althia.lk</li></ul>
+      </div>
+      <div>
+        <h4>Follow</h4>
+        <ul><li><a href="https://www.instagram.com/althia_lk" target="_blank" rel="noopener">Instagram</a></li><li><a href="https://www.facebook.com/profile.php?id=61585632940458" target="_blank" rel="noopener">Facebook</a></li><li><a href="https://www.tiktok.com/@sliit_hemas" target="_blank" rel="noopener">TikTok</a></li><li><a href="https://www.linkedin.com/company/sliit-hemas-allied-health-institute/" target="_blank" rel="noopener">LinkedIn</a></li></ul>
+      </div>
+    </div>
+    <div class="ftr-base"><span>&copy; 2026 ALTHIA. All rights reserved.</span><span><a href="#soon" data-soon>Privacy Policy</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#soon" data-soon>Terms of Service</a></span></div>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"><i></i><span id="toastT">Link copied</span></div>
+
+<!-- Netlify Forms: static copy so Netlify detects the "event-registration" form at deploy (the visible form is a popup) -->
+<form name="event-registration" method="POST" data-netlify="true" netlify-honeypot="bot-field" hidden>
+  <input name="event"><input name="name"><input name="email"><input name="phone"><input name="attendees"><input name="who"><textarea name="message"></textarea><input name="bot-field">
+</form>
+<script src="assets/cms-content.js"></script>
+<script>
+/* v4: article image gallery. Add or change photos per post here: post id -> list of IMG keys (or full image URLs). */
+var ARTICLE_GALLERY={"clinical-simulation-wing-opens": ["sim", "cpr", "ward", "lecture", "lawn"], "february-2027-intake-open": ["lawn", "aerial", "study", "cafe"], "hemas-clinical-placements": ["ward", "sim", "cpr", "lecture"], "campus-wellbeing-week": ["well", "psy", "lawn", "cafe", "sport"], "deakin-nursing-pathway": ["lecture", "study", "sim", "lawn"], "new-biomedical-lab-equipment": ["bio", "bench", "study"], "free-health-screening-camp": ["cafe", "ward", "talk", "lawn"], "open-day-february-2027": ["aerial", "lawn", "sim", "bio", "psy", "cafe"], "world-mental-health-day-talk": ["psy", "talk", "well", "lecture"], "careers-in-allied-health-online": ["talk", "lecture", "study"], "clinical-skills-workshop-school-leavers": ["cpr", "sim", "ward", "lawn"], "biomedical-research-symposium-2026": ["bench", "bio", "talk", "lecture"]};
+var GALLERY_CAPTIONS={"sim": "Clinical simulation lab", "cpr": "CPR practice", "ward": "On the ward", "bio": "Biomedical lab", "bench": "At the lab bench", "psy": "Counselling suite", "well": "Wellbeing pod", "lecture": "Lecture hall", "talk": "Talk in progress", "lawn": "Students on the lawn", "aerial": "Campus from above", "study": "Library study", "cafe": "Student hub", "wide": "Campus grounds", "sport": "Sports arena"};
+function v4Gallery(P){
+  var g=ARTICLE_GALLERY[P.id];if(!g||!g.length)return '';
+  var title=P.type==='event'?'Event gallery':'Photo gallery';
+  /* carousel: one large slide at a time, arrows, counter, swipe, thumbnails (behaviour in assets/v4.js) */
+  var q=function(t){return String(t).replace(/"/g,'&quot;')};
+  var slides='',thumbs='';
+  g.forEach(function(k,i){
+    var u=(typeof IMG!=='undefined'&&IMG[k])||k,big=u.replace(/w=\d+/,'w=2000'),cap=GALLERY_CAPTIONS[k]||P.title;
+    slides+='<div class="slide" role="group" aria-roledescription="slide" aria-label="'+(i+1)+' of '+g.length+'"><button type="button" class="ag" data-v4-img="'+big+'" data-title="'+q(cap)+'" aria-label="Enlarge: '+q(cap)+'"><img src="'+u.replace(/w=\d+/,'w=1600')+'" alt="'+q(cap)+'"'+(i?' loading="lazy"':'')+' onerror="this.style.visibility=\'hidden\'"><span class="zoom" aria-hidden="true"></span></button><p class="cap">'+cap+'</p></div>';
+    thumbs+='<button type="button" class="th'+(i?'':' on')+'" data-go="'+i+'" aria-label="Show photo '+(i+1)+'"><img src="'+u.replace(/w=\d+/,'w=300')+'" alt="" loading="lazy" onerror="this.style.visibility=\'hidden\'"></button>';
+  });
+  return '<section class="v4-agal" aria-label="'+title+'"><div class="hd"><h2>'+title+'</h2><span class="ct" aria-live="polite">01 / '+String(g.length).padStart(2,'0')+'</span></div>'+
+    '<div class="v4-car" data-v4-carousel tabindex="0" aria-roledescription="carousel" aria-label="'+title+'"><div class="vp"><div class="tr">'+slides+'</div>'+
+    '<button type="button" class="cnav cprev" aria-label="Previous photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>'+
+    '<button type="button" class="cnav cnext" aria-label="Next photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button></div>'+
+    '<div class="thumbs">'+thumbs+'</div></div></section>';
+}
+</script>
+<script>
+/* =====================================================================
+   INSIGHTS DATA — one list drives both the landing page and the inner page.
+   All copy, dates and names are DUMMY content; replace with client data.
+   Fields:
+     id     unique slug, used in the inner-page link: insights-detail.html?p=<id>
+     type   'news' | 'event' | 'research'
+     area   'nursing' | 'psychology' | 'biomedical' | 'health' | 'all'
+     img    key in the IMG map
+     date   publish date (YYYY-MM-DD). For events: the event date.
+     feat   true = featured story on the landing page (one post)
+   Events also use: time, venue, mode, fee
+   Research also uses: by (researchers), journal, keywords, findings
+   ===================================================================== */
+function U(id,w){return 'https://images.unsplash.com/photo-'+id+'?auto=format&fit=crop&w='+(w||1400)+'&q=80'}
+var IMG={
+  banner:  U('1564981797816-1043664bf78d',2200), /* library / learning commons */
+  sim:     U('1783519890730-3436fd0bf965'),      /* clinical simulation lab */
+  cpr:     U('1770215624975-12e0db0b83ec'),      /* CPR practice */
+  ward:    U('1645684996558-561e6c914e3e'),      /* clinical lab / ward */
+  bio:     U('1614935151651-0bea6508db6b'),      /* biomedical lab */
+  bench:   U('1602052577122-f73b9710adba'),      /* lab bench */
+  psy:     U('1706968983809-36cb29a3d56b'),      /* counselling suite */
+  well:    U('1758970081655-a9c08d367e68'),      /* wellbeing pod */
+  lecture: U('1758270705067-0d7edee57af0'),      /* lecture hall */
+  talk:    U('1758270704286-83476deb3bd1'),      /* lecture / talk */
+  lawn:    U('1707960572634-8b7649870d95'),      /* students on the lawn */
+  aerial:  U('1788591462308-8b546246a2de'),      /* aerial campus */
+  study:   U('1683319598210-d70486f2f996'),      /* library study */
+  cafe:    U('1567880905822-56f8e06fe630'),      /* student hub */
+  wide:    U('1510758588288-aa8cf9445f5b'),      /* campus wide */
+  sport:   U('1775993167393-f2add1f8eec2')       /* sports arena */
+};
+
+var AREAS={nursing:'Nursing',psychology:'Psychology',biomedical:'Biomedical Science',health:'Health Science',all:'All programmes'};
+var AREA_PAGE={nursing:'nursing.html',psychology:'psychology.html',biomedical:'biomedical-science.html',health:'health-science.html',all:'programmes.html'};
+var TYPES={news:'News',event:'Event',research:'Research'};
+
+var POSTS=[
+/* ---------------- NEWS ---------------- */
+{id:'clinical-simulation-wing-opens',type:'news',area:'nursing',img:'sim',date:'2026-09-28',feat:true,
+ author:'ALTHIA Communications',
+ title:'ALTHIA opens a new clinical simulation wing in Malabe',
+ excerpt:'Eight mock wards, high-fidelity manikins and a debrief suite give nursing and health science students hundreds of hours of hands-on practice before their first placement.',
+ body:[
+  ['p','The new clinical simulation wing at our Malabe campus opened this week, giving students a safe place to practise real procedures long before they meet their first patient.'],
+  ['p','The wing has eight mock wards set up like a working hospital, each with a high-fidelity patient manikin that breathes, talks and responds to treatment. Lecturers run scenarios from a control room, from a routine admission to a patient whose condition changes suddenly.'],
+  ['h2','Practice that feels like the real thing'],
+  ['p','Every session ends in the debrief suite, where students watch their recording back with a lecturer and talk through what went well and what to change. It is the same approach used in leading teaching hospitals.'],
+  ['q','Students make their mistakes here, with a manikin, not on a ward. By the time they reach placement, the basics feel routine.','Head of Nursing, ALTHIA'],
+  ['h2','Who uses the wing'],
+  ['ul',['HND in Nursing and Higher Diploma in Nursing students, from their first semester','Health Science students for patient assessment and first aid','Short course learners on life support and patient care courses']],
+  ['p','Prospective students can see the wing at our next Open Day.']
+ ]},
+{id:'february-2027-intake-open',type:'news',area:'all',img:'lawn',date:'2026-10-01',
+ author:'Admissions Office',
+ title:'Applications are now open for the February 2027 intake',
+ excerpt:'Apply online in about ten minutes for nursing, psychology, biomedical science and health science programmes. There is no application fee.',
+ body:[
+  ['p','Applications for our February 2027 intake are now open across all four programme areas: Nursing, Psychology, Biomedical Science and Health Science.'],
+  ['p','The online form takes about ten minutes. You can upload your documents as you go, and our admissions team replies within two working days.'],
+  ['h2','Key dates'],
+  ['ul',['Applications close: 15 January 2027','Interviews: throughout January 2027','Orientation: 1 February 2027']],
+  ['p','Not sure which course fits? Talk to our team on WhatsApp or come to our Open Day on 14 November.']
+ ]},
+{id:'hemas-clinical-placements',type:'news',area:'nursing',img:'ward',date:'2026-09-15',
+ author:'ALTHIA Communications',
+ title:'Nursing students begin clinical placements at Hemas Hospitals',
+ excerpt:'Our first nursing cohort has started supervised placements at Hemas Hospitals in Wattala and Thalawathugoda.',
+ body:[
+  ['p','Our first cohort of nursing students has started supervised clinical placements at Hemas Hospitals in Wattala and Thalawathugoda.'],
+  ['p','Each student works alongside a registered nurse mentor and rotates through medical, surgical and outpatient units over the semester.'],
+  ['q','The placements are where the classroom and the simulation lab come together. Students see why every step matters.','Clinical Placement Lead'],
+  ['p','Placements are a core part of every ALTHIA nursing programme, made possible by our partnership with Hemas.']
+ ]},
+{id:'campus-wellbeing-week',type:'news',area:'psychology',img:'well',date:'2026-09-04',
+ author:'Student Life',
+ title:'Psychology students lead a campus wellbeing week',
+ excerpt:'Talks, quiet zones and drop-in sessions run by second-year psychology students reached over 600 students across the Malabe campus.',
+ body:[
+  ['p','Second-year psychology students planned and ran this year’s campus wellbeing week, with talks, quiet zones and drop-in sessions open to every student in Malabe.'],
+  ['p','Sessions covered exam stress, sleep and how to support a friend who is struggling. The wellbeing pods were open all week for anyone who needed a quiet moment.'],
+  ['p','The project counts towards the students’ community practice module and was supervised by our counselling team.']
+ ]},
+{id:'deakin-nursing-pathway',type:'news',area:'nursing',img:'lecture',date:'2026-08-12',
+ author:'ALTHIA Communications',
+ title:'A new pathway to the Higher Diploma in Nursing with Deakin',
+ excerpt:'Students can now study the Deakin-linked Higher Diploma in Nursing in Colombo, with the same curriculum and assessment standards.',
+ body:[
+  ['p','Students can now study the Higher Diploma in Nursing, delivered with Deakin University, at our Malabe campus.'],
+  ['p','The programme follows the same curriculum and assessment standards, with teaching from ALTHIA lecturers and clinical placements in Sri Lanka.'],
+  ['p','Applications for the February 2027 intake are open now.']
+ ]},
+{id:'new-biomedical-lab-equipment',type:'news',area:'biomedical',img:'bio',date:'2026-07-20',
+ author:'ALTHIA Communications',
+ title:'Biomedical labs add PCR and clinical chemistry analysers',
+ excerpt:'New research-grade equipment means biomedical science students now train on the same machines used in hospital labs.',
+ body:[
+  ['p','Our biomedical science labs now have new PCR systems and clinical chemistry analysers, the same equipment used in hospital and research labs.'],
+  ['p','Students will use them from their second year for molecular diagnostics, haematology and clinical chemistry practicals, and for final-year research projects.']
+ ]},
+{id:'free-health-screening-camp',type:'news',area:'health',img:'cafe',date:'2026-06-30',
+ author:'Community Outreach',
+ title:'Health science students run a free screening camp in Malabe',
+ excerpt:'Over 300 residents had free blood pressure, blood sugar and BMI checks, with advice from students and supervising staff.',
+ body:[
+  ['p','Health science students ran a one-day free health screening camp for residents around our Malabe campus.'],
+  ['p','More than 300 people had blood pressure, blood sugar and BMI checks, and anyone with a high reading was referred to a nearby clinic.'],
+  ['p','The camp is part of the community health module and will run again next year.']
+ ]},
+
+/* ---------------- EVENTS ---------------- */
+{id:'open-day-february-2027',type:'event',area:'all',img:'aerial',date:'2026-11-14',
+ time:'9:00 am – 2:00 pm',venue:'SLIIT Malabe Campus',mode:'On campus',fee:'Free, walk in',
+ title:'Open Day: February 2027 intake',
+ excerpt:'Tour the labs, meet our lecturers and get help with your application on the day.',
+ body:[
+  ['p','Join us at the Malabe campus to see where you could be studying from February 2027.'],
+  ['h2','On the day'],
+  ['ul',['Guided tours of the simulation wing, biomedical labs and counselling suites','Short talks on each programme area','One-to-one advice on entry requirements and fees','Help completing your application']],
+  ['p','Bring a parent or friend. No registration needed, but letting us know helps us plan.']
+ ]},
+{id:'world-mental-health-day-talk',type:'event',area:'psychology',img:'psy',date:'2026-10-10',
+ time:'10:00 am – 12:00 pm',venue:'Main Auditorium, Malabe',mode:'On campus',fee:'Free, register',
+ title:'World Mental Health Day public talk',
+ excerpt:'Our psychology faculty and guest clinicians talk about mental health at work, with time for questions.',
+ body:[
+  ['p','Mark World Mental Health Day with a public talk from our psychology faculty and guest clinicians.'],
+  ['p','The talk looks at mental health at work: how to spot early signs of stress, and what employers and colleagues can do to help. There will be time for questions at the end.'],
+  ['p','Open to students, parents and the public.']
+ ]},
+{id:'careers-in-allied-health-online',type:'event',area:'all',img:'talk',date:'2026-12-02',
+ time:'6:30 pm – 7:30 pm',venue:'Online (Zoom)',mode:'Online',fee:'Free, register',
+ title:'Careers in allied health: online info session',
+ excerpt:'Find out where a nursing, psychology, biomedical or health science qualification can take you, in Sri Lanka and abroad.',
+ body:[
+  ['p','A one-hour online session for school leavers and parents on careers in allied health.'],
+  ['p','Lecturers from each programme area explain the roles graduates go into, in Sri Lanka and overseas, and what employers look for.'],
+  ['p','We will email the Zoom link after you register.']
+ ]},
+{id:'clinical-skills-workshop-school-leavers',type:'event',area:'nursing',img:'cpr',date:'2027-01-23',
+ time:'9:30 am – 1:00 pm',venue:'Clinical Simulation Wing',mode:'On campus',fee:'Free, limited places',
+ title:'Clinical skills workshop for school leavers',
+ excerpt:'Try basic life support, take a pulse and work with a patient manikin in our simulation wing.',
+ body:[
+  ['p','A hands-on morning for school leavers thinking about nursing or health science.'],
+  ['p','You will try basic life support, take vital signs and work through a simple ward scenario with a patient manikin, guided by our nursing lecturers.'],
+  ['p','Places are limited to 30, so please register early.']
+ ]},
+{id:'biomedical-research-symposium-2026',type:'event',area:'biomedical',img:'bench',date:'2026-08-22',
+ time:'9:00 am – 4:00 pm',venue:'Main Auditorium, Malabe',mode:'On campus',fee:'Free',
+ title:'Biomedical Science Research Symposium 2026',
+ excerpt:'Faculty and final-year students shared research on antimicrobial resistance, kidney disease and dengue diagnostics.',
+ body:[
+  ['p','Our first Biomedical Science Research Symposium brought together faculty, final-year students and guest speakers from hospital labs.'],
+  ['p','Talks covered antimicrobial resistance in hospital samples, early markers for kidney disease and faster dengue screening.'],
+  ['p','Thank you to everyone who joined us. Papers from the day are on the Research filter.']
+ ]},
+
+/* ---------------- RESEARCH (same papers as the programme pages) ---------------- */
+{id:'simulation-training-nursing-confidence',type:'research',area:'nursing',img:'sim',date:'2026-03-14',by:['Dr. Nadeesha Perera'],journal:'Sri Lanka Journal of Nursing (TBC)',
+ title:'Simulation-based training and nursing student confidence in Sri Lanka',
+ excerpt:'A study of how simulation sessions affect first-year nursing students’ confidence in core clinical skills before placement.',
+ keywords:['Simulation','Nursing education','Clinical skills'],
+ findings:['Confidence in core skills rose after six simulation sessions.','Debrief after each scenario was rated the most useful part.','Students with more simulation hours reported less anxiety on placement.']},
+{id:'patient-safety-private-wards',type:'research',area:'nursing',img:'ward',date:'2025-11-22',by:['Ms. Dilani Jayawardena'],journal:'Journal of Patient Safety (TBC)',
+ title:'Patient safety practices in private hospital wards',
+ excerpt:'A review of everyday safety checks on private hospital wards and where gaps most often appear.',
+ keywords:['Patient safety','Hospital wards'],
+ findings:['Handover was the step where most gaps appeared.','Wards with a written checklist missed fewer checks.','Night shifts showed lower checklist use.']},
+{id:'nurse-staffing-burnout',type:'research',area:'nursing',img:'cpr',date:'2025-08-08',by:['Dr. Ruwan Senanayake'],journal:'Asian Nursing Research (TBC)',
+ title:'Nurse staffing and burnout: a regional study',
+ excerpt:'How nurse-to-patient ratios relate to burnout across hospitals in the Western Province.',
+ keywords:['Burnout','Workforce'],
+ findings:['Higher patient loads linked to higher burnout scores.','Regular breaks lowered reported exhaustion.','Peer support schemes were rare but valued.']},
+{id:'student-wellbeing-transition',type:'research',area:'psychology',img:'well',date:'2026-02-03',by:['Dr. Shehani Wickramasinghe'],journal:'Journal of Student Wellbeing (TBC)',
+ title:'Student wellbeing after the transition to university',
+ excerpt:'Tracking first-year students’ wellbeing over their first two semesters and what helped them settle in.',
+ keywords:['Wellbeing','First-year students'],
+ findings:['Wellbeing dipped most in weeks 6 to 10.','Peer mentoring helped students settle faster.','Students who knew where to get help used it earlier.']},
+{id:'mental-health-stigma-young-adults',type:'research',area:'psychology',img:'psy',date:'2025-10-17',by:['Dr. Thilina Bandara'],journal:'Sri Lanka Journal of Psychiatry (TBC)',
+ title:'Mental health stigma among young adults in Sri Lanka',
+ excerpt:'A survey of attitudes to mental health and help-seeking among 18 to 25 year olds.',
+ keywords:['Stigma','Help-seeking','Young adults'],
+ findings:['Most respondents would support a friend, fewer would seek help themselves.','Family attitudes strongly shaped help-seeking.','Online information was the most trusted first step.']},
+{id:'workplace-stress-healthcare-staff',type:'research',area:'psychology',img:'talk',date:'2025-06-29',by:['Ms. Ishara Gunasekara'],journal:'Occupational Health Review (TBC)',
+ title:'Workplace stress and coping in healthcare staff',
+ excerpt:'How doctors, nurses and support staff cope with workplace stress, and which coping styles help most.',
+ keywords:['Stress','Coping','Healthcare staff'],
+ findings:['Problem-focused coping linked to lower stress.','Support staff reported the least access to help.','Short team debriefs were rated helpful.']},
+{id:'antimicrobial-resistance-urban-hospitals',type:'research',area:'biomedical',img:'bio',date:'2026-04-21',by:['Dr. Chamara Rathnayake'],journal:'Ceylon Medical Journal (TBC)',
+ title:'Antimicrobial resistance patterns in urban hospital samples',
+ excerpt:'Resistance patterns in bacterial samples from urban hospitals, and what they mean for first-line treatment.',
+ keywords:['Antimicrobial resistance','Microbiology'],
+ findings:['Resistance to common first-line drugs was rising.','Patterns differed between hospitals.','Regular local testing can guide better prescribing.']},
+{id:'kidney-disease-biomarkers',type:'research',area:'biomedical',img:'bench',date:'2025-12-05',by:['Dr. Anusha Weerasinghe'],journal:'Clinical Biochemistry (TBC)',
+ title:'Biomarkers for early detection of kidney disease',
+ excerpt:'Testing urine and blood markers that could flag chronic kidney disease earlier in high-risk communities.',
+ keywords:['Kidney disease','Biomarkers'],
+ findings:['Two urine markers rose before standard tests changed.','Low-cost screening is possible in rural clinics.','Larger follow-up studies are planned.']},
+{id:'dengue-molecular-screening',type:'research',area:'biomedical',img:'bio',date:'2025-07-12',by:['Mr. Kavindu Herath'],journal:'Tropical Medicine Reports (TBC)',
+ title:'Molecular screening methods for dengue',
+ excerpt:'Comparing fast molecular tests for dengue with standard lab methods for speed, cost and accuracy.',
+ keywords:['Dengue','PCR','Diagnostics'],
+ findings:['Fast tests matched lab accuracy in early infection.','Results were ready in under two hours.','Cost per test fell with batch testing.']},
+{id:'digital-health-adoption-clinics',type:'research',area:'health',img:'study',date:'2026-05-09',by:['Dr. Malith Dissanayake'],journal:'Health Informatics Journal (TBC)',
+ title:'Digital health adoption in Sri Lankan clinics',
+ excerpt:'How private and public clinics are taking up digital records, e-prescriptions and online appointments.',
+ keywords:['Digital health','Health systems'],
+ findings:['Online appointments were the most common first step.','Staff training was the main barrier.','Patients welcomed digital records when privacy was explained.']},
+{id:'patient-experience-outpatient',type:'research',area:'health',img:'cafe',date:'2026-01-30',by:['Ms. Sanduni Abeysekara'],journal:'Patient Experience Journal (TBC)',
+ title:'Patient experience in private outpatient services',
+ excerpt:'What patients value most in private outpatient visits, from waiting times to how clearly things are explained.',
+ keywords:['Patient experience','Outpatient care'],
+ findings:['Clear explanations mattered more than waiting time.','Booking systems cut waits by about a third.','Follow-up calls improved satisfaction.']},
+{id:'health-literacy-first-time-patients',type:'research',area:'health',img:'lecture',date:'2025-09-18',by:['Dr. Harsha Kumarasinghe'],journal:'Health Education Research (TBC)',
+ title:'Health literacy among first-time patients',
+ excerpt:'Measuring how well first-time patients understand their diagnosis and medicines, and simple ways to help.',
+ keywords:['Health literacy','Patient education'],
+ findings:['Many patients could not repeat their medicine plan.','Picture-based leaflets improved recall.','Teach-back took under two minutes per patient.']}
+];
+
+/* ---------- shared helpers ---------- */
+var MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+var MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+function pd(s){var a=s.split('-');return new Date(+a[0],+a[1]-1,+a[2])}
+function fmt(s){var d=pd(s);return ('0'+d.getDate()).slice(-2)+' '+MONTHS[d.getMonth()]+' '+d.getFullYear()}
+function today(){var n=new Date();return new Date(n.getFullYear(),n.getMonth(),n.getDate())}
+function isUpcoming(p){return p.type==='event'&&pd(p.date)>=today()}
+function initials(n){return n.replace(/^(Dr|Mr|Ms|Mrs|Prof)\.?\s+/,'').split(/\s+/).map(function(w){return w[0]}).join('').slice(0,2)}
+function readMin(p){
+  if(p.type==='research')return 6;
+  var w=0;(p.body||[]).forEach(function(b){w+=(typeof b[1]==='string'?b[1]:b[1].join(' ')).split(/\s+/).length});
+  return Math.max(2,Math.round(w/180)+1);
+}
+function link(p){return 'insights-detail.html?p='+p.id}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+
+/* card markup shared by the landing grid and "related" on the inner page */
+function card(p){
+  var area='<span class="ar-t">'+AREAS[p.area]+'</span>';
+  if(p.type==='research'){
+    return '<a class="ic ic-r" href="'+link(p)+'" data-type="research">'+
+      '<div class="ic-top"><span class="tag">Research paper</span>'+area+'</div>'+
+      '<h3>'+esc(p.title)+'</h3>'+
+      '<p class="by"><span class="av">'+initials(p.by[0])+'</span>'+esc(p.by.join(', '))+'</p>'+
+      '<div class="ic-foot"><span>Published on &ndash; '+fmt(p.date)+'</span><span class="more">Read paper <svg><use href="#arrow"/></svg></span></div></a>';
+  }
+  var d=pd(p.date),up=isUpcoming(p);
+  var media='<div class="ic-img"><div data-img="'+p.img+'" role="img" aria-label=""></div>'+
+    (p.type==='event'?'<span class="dt"><b>'+('0'+d.getDate()).slice(-2)+'</b>'+MON[d.getMonth()]+'</span><span class="st'+(up?' up':'')+'">'+(up?'Upcoming':'Past event')+'</span>':'')+'</div>';
+  var meta=p.type==='event'?'<span>'+p.time+'</span><span>'+esc(p.venue)+'</span>':'<span>'+fmt(p.date)+'</span><span>'+readMin(p)+' min read</span>';
+  return '<a class="ic" href="'+link(p)+'" data-type="'+p.type+'">'+media+
+    '<div class="ic-body"><div class="ic-top"><span class="tag'+(p.type==='event'?' ev':'')+'">'+TYPES[p.type]+'</span>'+area+'</div>'+
+    '<h3>'+esc(p.title)+'</h3><p class="ex">'+esc(p.excerpt)+'</p>'+
+    '<div class="ic-foot">'+meta+'</div></div></a>';
+}
+
+/* load [data-img] backgrounds with gradient fallback */
+function loadImgs(root){
+  Array.prototype.forEach.call((root||document).querySelectorAll('[data-img]:not([data-ld])'),function(el){
+    el.setAttribute('data-ld','1');
+    var u=IMG[el.dataset.img];if(!u){el.classList.add('noimg');return}
+    var im=new Image();
+    im.onload=function(){el.style.setProperty('--img','url("'+u+'")')};
+    im.onerror=function(){el.classList.add('noimg');console.warn('[ALTHIA] image failed:',el.dataset.img)};
+    im.src=u;
+  });
+}
+
+
+/* v4 CMS: render runs after content/insights.json loads (inline POSTS above is the fallback) */
+window.__althiaRender=function(){
+  var $=function(s,c){return (c||document).querySelector(s)},$$=function(s,c){return Array.prototype.slice.call((c||document).querySelectorAll(s))};
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---- which post? ?p=<id>  (falls back to the featured post) ---- */
+  var id=new URLSearchParams(location.search).get('p');
+  var P=POSTS.filter(function(p){return p.id===id})[0]||POSTS.filter(function(p){return p.feat})[0]||POSTS[0];
+  var typeLbl={news:'News',event:'Events',research:'Research'}[P.type];
+  document.title=P.title+' | ALTHIA Insights';
+  var md=document.querySelector('meta[name="description"]');if(md)md.content=P.excerpt;
+
+  var d=pd(P.date),up=isUpcoming(P);
+  /* ---- title block ---- */
+  var words=esc(P.title).split(' ').map(function(w,i){return '<span class="w" style="animation-delay:'+(reduce?0:.1+i*.04)+'s">'+w+'</span>'}).join(' ');
+  var who,meta;
+  if(P.type==='research'){
+    who='<span class="who"><span class="av">'+initials(P.by[0])+'</span><span>'+esc(P.by.join(', '))+'<small>'+AREAS[P.area]+' faculty</small></span></span>';
+    meta='<span class="mi"><svg><use href="#i-cal"/></svg>Published on &ndash; '+fmt(P.date)+'</span><span class="mi"><svg><use href="#i-clock"/></svg>'+readMin(P)+' min read</span>';
+  }else if(P.type==='event'){
+    who='';
+    meta='<span class="mi"><svg><use href="#i-cal"/></svg>'+fmt(P.date)+'</span><span class="mi"><svg><use href="#i-clock"/></svg>'+P.time+'</span><span class="mi"><svg><use href="#i-pin"/></svg>'+esc(P.venue)+'</span>';
+  }else{
+    who='<span class="who"><span class="av">'+initials(P.author)+'</span><span>'+esc(P.author)+'<small>ALTHIA</small></span></span>';
+    meta='<span class="mi"><svg><use href="#i-cal"/></svg>'+fmt(P.date)+'</span><span class="mi"><svg><use href="#i-clock"/></svg>'+readMin(P)+' min read</span>';
+  }
+  $('#head').innerHTML=
+    '<nav class="crumb" aria-label="Breadcrumb"><a href="index.html">Home</a><i></i><a href="insights.html">Insights</a><i></i><a href="insights.html?type='+P.type+'">'+typeLbl+'</a></nav>'+
+    '<div class="tags"><span class="tag g">'+(P.type==='research'?'Research paper':TYPES[P.type])+'</span>'+(P.type==='event'?'<span class="tag">'+(up?'Upcoming':'Past event')+'</span>':'')+
+    '<a class="tag" href="'+AREA_PAGE[P.area]+'">'+AREAS[P.area]+'</a></div>'+
+    '<h1>'+words+'</h1><p class="stand">'+esc(P.excerpt)+'</p><div class="ameta">'+who+meta+'</div>';
+
+  /* ---- image ---- */
+  var hi=$('#heroImg');hi.dataset.img=P.img;hi.setAttribute('aria-label',P.title);
+  $('#cap').textContent=(P.type==='event'?'ALTHIA event':P.type==='research'?'Research at ALTHIA':'ALTHIA news')+' · Photo for illustration';
+
+  /* ---- write-up ---- */
+  var body=P.body;
+  if(P.type==='research'){
+    body=[
+      ['box','Summary',P.excerpt],
+      ['h2','Why this study'],
+      ['p','This paper comes from ALTHIA’s '+AREAS[P.area]+' faculty. It looks at a question that matters for patients and health services in Sri Lanka, and for how we train the next generation of health professionals.'],
+      ['h2','Key findings'],
+      ['ol',P.findings],
+      ['h2','What it means'],
+      ['p','The findings feed straight into our teaching, so students learn from current local evidence, not only from textbooks. The full paper, including methods and data, is available to download.'],
+      ['kw',P.keywords]
+    ];
+  }
+  var first=true;
+  $('#prose').innerHTML=body.map(function(b){
+    var t=b[0];
+    if(t==='p'){var c=first?' class="lead"':'';first=false;return '<p'+c+'>'+esc(b[1])+'</p>'}
+    if(t==='h2')return '<h2>'+esc(b[1])+'</h2>';
+    if(t==='ul'||t==='ol')return '<'+t+'>'+b[1].map(function(x){return '<li>'+esc(x)+'</li>'}).join('')+'</'+t+'>';
+    if(t==='q')return '<blockquote><p>&ldquo;'+esc(b[1])+'&rdquo;</p><cite>'+esc(b[2])+'</cite></blockquote>';
+    if(t==='box')return '<div class="abox"><h3>'+b[1]+'</h3><p>'+esc(b[2])+'</p></div>';
+    if(t==='kw')return '<div class="kw">'+b[1].map(function(k){return '<span class="tag">'+esc(k)+'</span>'}).join('')+'</div>';
+    return '';
+  }).join('')+
+  v4Gallery(P)+'<div class="aend"><a class="back" href="insights.html?type='+P.type+'"><svg><use href="#arrow"/></svg>Back to '+typeLbl.toLowerCase()+'</a></div>';
+  $('#abody').dataset.type=P.type;
+
+  /* ---- share buttons (both rail and end of article) ---- */
+  var url=location.href.split('#')[0],u=encodeURIComponent(url),t=encodeURIComponent(P.title);
+  var SH=[
+    ['Facebook','i-fb','https://www.facebook.com/sharer/sharer.php?u='+u],
+    ['LinkedIn','i-in','https://www.linkedin.com/sharing/share-offsite/?url='+u],
+    ['X','i-x','https://twitter.com/intent/tweet?url='+u+'&text='+t],
+    ['WhatsApp','i-wa','https://wa.me/?text='+t+'%20'+u],
+    ['Copy link','i-link','']
+  ];
+  var shHTML=SH.map(function(s){return s[2]
+    ?'<a class="sh" href="'+s[2]+'" target="_blank" rel="noopener" aria-label="Share on '+s[0]+'"><svg><use href="#'+s[1]+'"/></svg><span class="tip">'+s[0]+'</span></a>'
+    :'<button class="sh" data-copy aria-label="Copy link"><svg><use href="#'+s[1]+'"/></svg><span class="tip">'+s[0]+'</span></button>'}).join('');
+  $$('.shares').forEach(function(el){el.innerHTML=shHTML});
+  var tt;function toast(m){$('#toastT').textContent=m;$('#toast').classList.add('on');clearTimeout(tt);tt=setTimeout(function(){$('#toast').classList.remove('on')},2200)}
+  function copy(txt,msg){
+    function fb(){var a=document.createElement('textarea');a.value=txt;a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(e){}a.remove();toast(msg)}
+    if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(txt).then(function(){toast(msg)},fb);else fb();
+  }
+  document.addEventListener('click',function(e){
+    if(e.target.closest('[data-copy]'))copy(url,'Link copied');
+    if(e.target.closest('[data-cite]'))copy(P.by.join(', ')+' ('+d.getFullYear()+'). '+P.title+'. '+P.journal+'. ALTHIA, Sri Lanka.','Citation copied');
+    if(e.target.closest('[data-ics]'))ics();
+  });
+
+  /* ---- aside (changes by type) ---- */
+  var fol='<div class="fol"><small>Follow ALTHIA</small><div class="ico">'+
+    '<a class="sh" href="https://www.instagram.com/althia_lk" target="_blank" rel="noopener" aria-label="Instagram"><svg><use href="#i-ig"/></svg></a>'+
+    '<a class="sh" href="https://www.facebook.com/profile.php?id=61585632940458" target="_blank" rel="noopener" aria-label="Facebook"><svg><use href="#i-fb"/></svg></a>'+
+    '<a class="sh" href="https://www.tiktok.com/@sliit_hemas" target="_blank" rel="noopener" aria-label="TikTok"><svg><use href="#i-tt"/></svg></a></div></div>';
+  var side='';
+  if(P.type==='event'){
+    var days=Math.round((d-today())/864e5);
+    var cd=!up?'<span class="cd past"><i></i>This event has ended</span>':days===0?'<span class="cd"><i></i>Happening today</span>':'<span class="cd"><i></i>In '+days+' day'+(days>1?'s':'')+'</span>';
+    side='<div class="box"><div class="box-h"><small>Event details</small><div class="big">'+('0'+d.getDate()).slice(-2)+'<span>'+MONTHS[d.getMonth()]+' '+d.getFullYear()+'</span></div>'+cd+'</div>'+
+      '<div class="rows"><div><svg><use href="#i-clock"/></svg><span><small>Time</small>'+P.time+'</span></div><div><svg><use href="#i-pin"/></svg><span><small>Venue</small>'+esc(P.venue)+'</span></div><div><svg><use href="#i-cal"/></svg><span><small>Entry</small>'+esc(P.fee)+'</span></div></div>'+
+      '<div class="box-a">'+(up
+        ?'<a class="btn" href="#register" data-v4-register="'+esc(P.title)+'" data-when="'+fmt(P.date)+(P.time?' · '+esc(P.time):'')+(P.venue?' · '+esc(P.venue):'')+'">Register now <span class="ar">&rarr;</span></a><button class="btn line" data-ics><svg><use href="#i-cal"/></svg>Add to calendar</button>'
+        :'<a class="btn" href="insights.html?type=event">See upcoming events <span class="ar">&rarr;</span></a>')+'</div></div>';
+  }else if(P.type==='research'){
+    side='<div class="box"><div class="box-h"><small>Paper details</small><h3>'+AREAS[P.area]+'</h3></div>'+
+      '<div class="rows"><div><svg><use href="#i-link"/></svg><span><small>Researcher'+(P.by.length>1?'s':'')+'</small>'+esc(P.by.join(', '))+'</span></div><div><svg><use href="#i-cal"/></svg><span><small>Published on</small>'+fmt(P.date)+'</span></div><div><svg><use href="#i-dl"/></svg><span><small>Journal</small>'+esc(P.journal)+'</span></div></div>'+
+      '<div class="box-a"><a class="btn" href="#soon" data-soon>Download PDF <span class="ar">&darr;</span></a><button class="btn line" data-cite>Copy citation</button></div></div>';
+  }else{
+    side='<div class="box"><div class="box-h"><small>Related programme</small><h3>'+(P.area==='all'?'Explore all programmes':AREAS[P.area])+'</h3></div>'+
+      '<p class="pad">'+(P.area==='all'?'Nursing, Psychology, Biomedical Science and Health Science, all on one campus in Malabe.':'See the courses, entry routes and careers in '+AREAS[P.area]+'.')+'</p>'+
+      '<div class="box-a"><a class="btn line" href="'+AREA_PAGE[P.area]+'">View programme <span class="ar">&rarr;</span></a><a class="btn" href="https://apply.sliit.lk/" target="_blank" rel="noopener">Apply now <span class="ar">&rarr;</span></a></div></div>';
+  }
+  $('#side').innerHTML=side+'<div class="box">'+fol+'</div>';
+  $$('[data-soon]').forEach(function(a){a.addEventListener('click',function(e){e.preventDefault()})});
+
+  /* ---- add-to-calendar (.ics download) ---- */
+  function ics(){
+    var m=P.time.match(/(\d+):(\d+)\s*(am|pm)\s*–\s*(\d+):(\d+)\s*(am|pm)/i);
+    function hh(h,mm,ap){h=+h%12+(ap.toLowerCase()==='pm'?12:0);return ('0'+h).slice(-2)+mm+'00'}
+    var ds=P.date.replace(/-/g,'');
+    var s=m?ds+'T'+hh(m[1],m[2],m[3]):ds,e=m?ds+'T'+hh(m[4],m[5],m[6]):ds;
+    var txt=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//ALTHIA//Insights//EN','BEGIN:VEVENT','UID:'+P.id+'@althia.lk',
+      'DTSTAMP:'+new Date().toISOString().replace(/[-:]/g,'').slice(0,15)+'Z',
+      'DTSTART;TZID=Asia/Colombo:'+s,'DTEND;TZID=Asia/Colombo:'+e,'SUMMARY:'+P.title,'LOCATION:'+P.venue,'DESCRIPTION:'+P.excerpt+' '+url,'END:VEVENT','END:VCALENDAR'].join('\r\n');
+    var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type:'text/calendar'}));a.download=P.id+'.ics';document.body.appendChild(a);a.click();a.remove();
+    toast('Calendar file downloaded');
+  }
+
+  /* ---- related: same type + area first, then same type, then the rest ---- */
+  var others=POSTS.filter(function(p){return p!==P});
+  function score(p){return (p.type===P.type?2:0)+(p.area===P.area?1:0)}
+  others.sort(function(a,b){return score(b)-score(a)||pd(b.date)-pd(a.date)});
+  if(P.type==='event'){var ue=others.filter(function(p){return isUpcoming(p)}).sort(function(a,b){return pd(a.date)-pd(b.date)});others=ue.concat(others.filter(function(p){return ue.indexOf(p)<0}))}
+  $('#rel').innerHTML=others.slice(0,3).map(card).join('');
+  $('#relEy').textContent={news:'More news',event:'More events',research:'More research'}[P.type];
+  $('#relAll').href='insights.html?type='+P.type;
+  $('#relAll').firstChild.textContent='All '+typeLbl.toLowerCase()+' ';
+  $$('#rel .ic').forEach(function(c){c.classList.add('rv')});
+
+  loadImgs();
+
+  /* ---- header, menu, reveals, progress, parallax ---- */
+  var hdr=$('#hdr'),menuBtn=$('#menuBtn');
+  menuBtn.addEventListener('click',function(){var o=hdr.classList.toggle('open');menuBtn.setAttribute('aria-expanded',o)});
+  $$('#nav a').forEach(function(a){a.addEventListener('click',function(){hdr.classList.remove('open');menuBtn.setAttribute('aria-expanded','false')})});
+  $$('#nav [data-soon], .ftr [data-soon]').forEach(function(a){a.addEventListener('click',function(e){e.preventDefault()})});
+  var els=$$('.rv');
+  if('IntersectionObserver' in window&&!reduce){
+    var io=new IntersectionObserver(function(en){en.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.15});
+    els.forEach(function(el){io.observe(el)});
+  }else els.forEach(function(el){el.classList.add('in')});
+  var art=$('#prose'),bar=$('#rprog');
+  function onScroll(){
+    hdr.classList.toggle('solid',scrollY>200);
+    var r=art.getBoundingClientRect(),p=Math.min(1,Math.max(0,(innerHeight*.5-r.top)/r.height));
+    bar.style.transform='scaleX('+p+')';
+    if(!reduce){var hr=hi.parentNode.getBoundingClientRect();if(hr.bottom>0&&hr.top<innerHeight)hi.style.transform='translateY('+((hr.top+hr.height/2-innerHeight/2)*-.06)+'px)'}
+  }
+  addEventListener('scroll',onScroll,{passive:true});addEventListener('resize',onScroll);onScroll();
+};
+ALTHIA_CMS.loadInsights(window.__althiaRender);
+</script>
+<script src="assets/v4.js"></script>
+</body>
+</html>

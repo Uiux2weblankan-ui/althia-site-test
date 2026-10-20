@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>ALTHIA Content Manager</title>
+  <link rel="icon" href="/assets/img/althia-logo.svg" type="image/svg+xml">
+  <!-- Netlify Identity: editor login -->
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <script>
+    /* Safety 1: jumping straight from one editor to another (address bar, bookmarks, back/forward)
+       can leave Decap showing an empty list. Reload so every editor always starts fresh. */
+    (function(){
+      var re = /^#\/collections\/([^/]+)\/entries\/([^/?]+)/, last = location.hash;
+      window.addEventListener('hashchange', function(){
+        var a = last.match(re), b = location.hash.match(re); last = location.hash;
+        if(a && b && a[0] !== b[0]) location.reload();
+      });
+    })();
+  </script>
+</head>
+<body>
+  <!-- Decap CMS (pinned) -->
+  <script src="https://cdn.jsdelivr.net/npm/decap-cms@3.16.3/dist/decap-cms.js"></script>
+  <script>
+    /* Live preview uses the site's own fonts and colours */
+    CMS.registerPreviewStyle('https://fonts.googleapis.com/css2?family=Figtree:wght@400;600&family=Plus+Jakarta+Sans:wght@600;800&display=swap');
+    CMS.registerPreviewStyle('/admin/preview.css');
+
+    /* Safety 2: before saving, compare with the live site. If a save would remove more than one
+       post or video at once, ask the editor to confirm. Cancelling stops the save. */
+    (function(){
+      var LIVE = {};
+      function count(file, key){
+        return fetch('/content/' + file + '?v=' + Date.now(), {cache: 'no-store'})
+          .then(function(r){ return r.ok ? r.json() : null; })
+          .then(function(d){ if(d && Array.isArray(d[key])) LIVE[key] = d[key].length; })
+          .catch(function(){});
+      }
+      count('insights.json', 'posts'); count('home.json', 'videos');
+      function guard(key, n, label){
+        var was = LIVE[key];
+        if(typeof was === 'number' && n < was - 1){
+          var ok = window.confirm('Careful: this save will remove ' + (was - n) + ' ' + label + ' (' + was + ' → ' + n + ').\n\nIf you did not mean to delete them, press Cancel and reload the page.\n\nPress OK only if you really want to remove them.');
+          if(!ok) throw new Error('Save cancelled: no ' + label + ' were removed.');
+        }
+        LIVE[key] = n;
+      }
+      CMS.registerEventListener({
+        name: 'preSave',
+        handler: function(o){
+          var e = o.entry, c = e.get('collection'), data = e.get('data').toJS();
+          if(c === 'insights') guard('posts', (data.posts || []).length, 'posts');
+          if(c === 'homepage') guard('videos', (data.videos || []).length, 'videos');
+          return e.get('data');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,176 @@
+# =====================================================================
+# ALTHIA — Decap CMS configuration
+# Editors log in at https://<your-site>/admin/
+# Every save is a Git commit; Netlify redeploys automatically (about 30 s).
+# =====================================================================
+
+backend:
+  name: git-gateway          # Netlify Identity login + Git Gateway (enable both in Netlify)
+  branch: main               # the branch Netlify deploys from
+  commit_messages:
+    update: "CMS: update {{collection}} “{{slug}}”"
+    uploadMedia: "CMS: upload “{{path}}”"
+# Alternative for production (editors log in with GitHub instead of Identity):
+# backend:
+#   name: github
+#   repo: <github-user>/<repo-name>
+#   branch: main
+
+# Lets you run the CMS on your own computer with `npx decap-server` (ignored on Netlify)
+local_backend: true
+
+site_url: https://leafy-custard-ca18a3.netlify.app
+display_url: https://leafy-custard-ca18a3.netlify.app
+logo_url: /assets/img/althia-logo.svg
+
+media_folder: assets/uploads     # where uploaded images are saved in the repo
+public_folder: /assets/uploads   # how the site links to them
+
+collections:
+
+  # ------------------------------------------------------------------
+  - name: insights
+    label: Insights
+    description: News, events and research shown on the Insights pages. Each item has its own page at insights-detail.html?p=<id>.
+    editor: {preview: false}
+    files:
+      - name: posts
+        label: News, events & research
+        file: content/insights.json
+        fields:
+          - label: Posts
+            name: posts
+            widget: list
+            min: 1            # safety: the list can never be saved empty
+            summary: "{{fields.type}} · {{fields.date}} · {{fields.title}}"
+            add_to_top: true
+            collapsed: true
+            fields:
+              - {label: Title, name: title, widget: string}
+              - label: Page ID
+                name: id
+                widget: string
+                hint: "Short, unique, lowercase with hyphens, e.g. open-day-february-2027. Used in the page link. Don't change it after publishing."
+                pattern: ['^[a-z0-9]+(?:-[a-z0-9]+)*$', 'Lowercase letters, numbers and hyphens only']
+              - label: Type
+                name: type
+                widget: select
+                options: [{label: News, value: news}, {label: Event, value: event}, {label: Research paper, value: research}]
+                default: news
+              - label: Programme area
+                name: area
+                widget: select
+                default: all
+                options:
+                  - {label: All programmes, value: all}
+                  - {label: Biomedical Science, value: biomedical}
+                  - {label: Health Science, value: health}
+                  - {label: Nursing, value: nursing}
+                  - {label: Psychology, value: psychology}
+              - label: Date
+                name: date
+                widget: datetime
+                format: YYYY-MM-DD
+                date_format: DD MMM YYYY
+                time_format: false
+                hint: For events, the event date. Upcoming events appear in the "Upcoming events" box automatically.
+              - {label: Featured story, name: featured, widget: boolean, default: false, required: false, hint: "Shown as the big story at the top of the Insights page. Turn it on for one post only."}
+              - {label: Main image, name: image, widget: image, required: false, choose_url: true}
+              - {label: Summary, name: excerpt, widget: text, hint: "One or two sentences. Used on cards and under the title."}
+              - {label: Author (news), name: author, widget: string, required: false, default: ALTHIA Communications}
+              - {label: Time (events), name: time, widget: string, required: false, hint: "e.g. 9:00 am – 2:00 pm"}
+              - {label: Venue (events), name: venue, widget: string, required: false}
+              - {label: Mode (events), name: mode, widget: select, required: false, options: [On campus, Online, Hybrid]}
+              - {label: Entry / fee (events), name: fee, widget: string, required: false, hint: "e.g. Free, walk in"}
+              - label: Researchers (research)
+                name: by
+                widget: list
+                required: false
+                field: {label: Name, name: name, widget: string}
+              - {label: Journal (research), name: journal, widget: string, required: false}
+              - label: Keywords (research)
+                name: keywords
+                widget: list
+                required: false
+                field: {label: Keyword, name: keyword, widget: string}
+              - label: Key findings (research)
+                name: findings
+                widget: list
+                required: false
+                field: {label: Finding, name: finding, widget: text}
+              - label: Article
+                name: body
+                widget: list
+                required: false
+                hint: Build the article from blocks. The first paragraph is shown larger.
+                types:
+                  - label: Paragraph
+                    name: paragraph
+                    widget: object
+                    summary: "{{fields.text}}"
+                    fields: [{label: Text, name: text, widget: text}]
+                  - label: Heading
+                    name: heading
+                    widget: object
+                    summary: "{{fields.text}}"
+                    fields: [{label: Text, name: text, widget: string}]
+                  - label: Quote
+                    name: quote
+                    widget: object
+                    summary: "{{fields.text}}"
+                    fields: [{label: Quote, name: text, widget: text}, {label: Who said it, name: cite, widget: string, required: false}]
+                  - label: Bullet list
+                    name: list
+                    widget: object
+                    fields: [{label: Items, name: items, widget: list, field: {label: Item, name: item, widget: string}}]
+              - label: Photo gallery (carousel)
+                name: gallery
+                widget: list
+                required: false
+                summary: "{{fields.caption}}"
+                hint: Photos shown in a carousel at the end of the article. Ideal for event photos.
+                fields:
+                  - {label: Photo, name: image, widget: image, choose_url: true}
+                  - {label: Caption, name: caption, widget: string, required: false}
+
+  # ------------------------------------------------------------------
+  - name: homepage
+    label: Homepage
+    editor: {preview: false}
+    files:
+      - name: home
+        label: Countdown & video reviews
+        file: content/home.json
+        fields:
+          - label: Countdown banner (upcoming event)
+            name: event
+            widget: object
+            fields:
+              - {label: Show the banner, name: show, widget: boolean, default: true}
+              - {label: Badge, name: badge, widget: string, default: Upcoming event}
+              - {label: Event title, name: title, widget: string}
+              - label: Starts at (Sri Lanka time)
+                name: start
+                widget: datetime
+                format: YYYY-MM-DDTHH:mm
+                date_format: DD MMM YYYY
+                time_format: "h:mm A"
+                picker_utc: false
+              - {label: Date text, name: date_label, widget: string, hint: "e.g. Saturday, 14 November 2026"}
+              - {label: Time text, name: time_label, widget: string, hint: "e.g. 9:00 am – 2:00 pm"}
+              - {label: Venue, name: venue, widget: string}
+              - {label: Button text, name: button_label, widget: string, default: Event details}
+              - {label: Button link, name: link, widget: string, hint: "e.g. insights-detail.html?p=open-day-february-2027"}
+              - {label: Text when the event has started, name: done_text, widget: string, required: false}
+          - label: Video reviews
+            name: videos
+            widget: list
+            min: 1
+            summary: "{{fields.title}}"
+            hint: The first video is shown large. Five videos fill the grid best.
+            fields:
+              - {label: Title, name: title, widget: string}
+              - {label: Student / subtitle, name: subtitle, widget: string, required: false}
+              - {label: YouTube link or ID, name: youtube, widget: string, required: false, hint: "Paste the YouTube link. Leave empty to show 'Video coming soon'."}
+              - {label: Duration, name: duration, widget: string, required: false, hint: "e.g. 2:14"}
+              - {label: Thumbnail, name: thumbnail, widget: image, choose_url: true}

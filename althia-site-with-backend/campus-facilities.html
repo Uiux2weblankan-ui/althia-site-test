@@ -1,0 +1,659 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Campus &amp; Facilities | ALTHIA Health Uni</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* Tokens taken from the "Homepage — Final Design" Figma frame */
+:root{
+  --bg:#FAFAF8; --white:#FFFFFF; --mist:#F2EFF7;
+  --ink:#15121C; --ink2:#463F52; --ink3:#6B6577;
+  --line:rgba(21,18,28,.10);
+  --purple:#653092; --blue:#2670B8; --green:#1BB680;
+  --grad:linear-gradient(100deg,#653092 0%,#2670B8 55%,#1BB680 100%);
+  --gutter:clamp(16px,4vw,56px); --maxw:1328px;
+  --r:12px;
+  --display:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --body:'Figtree',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --ease:cubic-bezier(.22,.8,.24,1);
+  color-scheme:light;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;overflow-x:clip}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1rem/1.6 var(--body);-webkit-font-smoothing:antialiased;overflow-x:clip}
+body.lock{overflow:hidden}
+h1,h2,h3,p,ul,ol,figure{margin:0;padding:0}
+ul,ol{list-style:none}
+a{color:inherit;text-decoration:none}
+img,svg{max-width:100%}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:6px}
+[id]{scroll-margin-top:150px}
+.container{width:100%;max-width:calc(var(--maxw) + 2*var(--gutter));margin-inline:auto;padding-inline:var(--gutter)}
+.eyebrow{font:700 .75rem/1 var(--display);letter-spacing:.16em;text-transform:uppercase;color:var(--purple)}
+.mix{font:400 clamp(1.9rem,3.2vw,2.6rem)/1.15 var(--display);letter-spacing:-.02em;text-wrap:balance}
+.mix b{font-weight:800}
+
+/* image slots: filled by JS from the IMG map; gradient fallback if a photo fails */
+[data-img]{background-color:#2a2433}
+[data-img].noimg{background-image:var(--grad)!important}
+
+/* ---------- header ---------- */
+.hdr{position:fixed;inset:0 0 auto 0;z-index:50;height:80px;background:rgba(21,18,28,.27);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);transition:background .4s}
+.hdr.solid{background:rgba(21,18,28,.86)}
+.hdr-in{height:100%;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.logo{display:block;line-height:0;color:#fff}
+.logo svg{height:28px;width:auto}
+.nav{display:flex;align-items:center;gap:clamp(18px,2.6vw,38px)}
+.nav a{font:500 .82rem/1 var(--display);letter-spacing:.01em;color:rgba(255,255,255,.92);padding-block:8px;background:linear-gradient(#fff,#fff) left bottom/0 1.5px no-repeat;transition:background-size .4s var(--ease)}
+.nav a:hover,.nav a[aria-current="page"]{background-size:100% 1.5px;color:#fff}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:38px;padding:0 22px;border-radius:999px;border:0;cursor:pointer;font:700 .82rem/1 var(--display);color:#fff;background:var(--grad);background-size:180% 100%;background-position:0 0;transition:background-position .6s var(--ease),box-shadow .5s var(--ease),transform .4s var(--ease);white-space:nowrap}
+.btn:hover{background-position:100% 0;box-shadow:0 14px 30px -14px rgba(38,112,184,.8);transform:translateY(-1px)}
+.btn.lg{height:48px;padding:0 26px;font-size:.88rem}
+.btn .ar{transition:transform .4s var(--ease)}
+.btn:hover .ar{transform:translateX(4px)}
+.btn.ghost{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.55)}
+.btn.ghost:hover{background:rgba(255,255,255,.18);box-shadow:none}
+.menu-btn{display:none;width:42px;height:42px;border-radius:999px;border:1px solid rgba(255,255,255,.4);background:transparent;color:#fff;cursor:pointer;align-items:center;justify-content:center}
+.menu-btn span,.menu-btn span::before,.menu-btn span::after{display:block;width:16px;height:1.5px;background:#fff;position:relative;transition:transform .3s}
+.menu-btn span::before,.menu-btn span::after{content:"";position:absolute;left:0}
+.menu-btn span::before{top:-5px}.menu-btn span::after{top:5px}
+.hdr.open .menu-btn span{background:transparent}
+.hdr.open .menu-btn span::before{transform:translateY(5px) rotate(45deg)}
+.hdr.open .menu-btn span::after{transform:translateY(-5px) rotate(-45deg)}
+@media (max-width:980px){
+  .menu-btn{display:inline-flex}
+  .hdr .btn{display:none}
+  .nav{position:absolute;top:80px;left:0;right:0;flex-direction:column;align-items:stretch;gap:0;padding:8px var(--gutter) 20px;background:rgba(21,18,28,.96);display:none}
+  .hdr.open .nav{display:flex}
+  .nav a{padding:15px 0;border-bottom:1px solid rgba(255,255,255,.1);font-size:.95rem;background:none}
+}
+
+/* ---------- banner ---------- */
+.ban{position:relative;height:clamp(360px,52vh,460px);display:flex;align-items:flex-end;color:#fff;overflow:hidden;background:var(--ink)}
+.ban-img{position:absolute;inset:0;background:var(--img) center 50%/cover no-repeat;transform:scale(1.08);animation:kb 14s var(--ease) forwards}
+@keyframes kb{to{transform:scale(1)}}
+.ban::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(21,18,28,.85) 0%,rgba(21,18,28,.5) 50%,rgba(21,18,28,.2) 100%),linear-gradient(0deg,rgba(21,18,28,.55),transparent 55%)}
+.emblem{position:absolute;right:-60px;bottom:-140px;width:min(520px,60vw);height:auto;color:#fff;opacity:.08;z-index:1;pointer-events:none}
+.ban .container{position:relative;z-index:2;padding-top:80px;padding-bottom:clamp(36px,5vw,56px)}
+.crumb{display:flex;align-items:center;gap:10px;font-size:.84rem;color:rgba(255,255,255,.72);margin-bottom:16px}
+.crumb a:hover{color:#fff}
+.crumb i{width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.6)}
+.ban h1{font:400 clamp(2.4rem,4.8vw,3.9rem)/1.02 var(--display);letter-spacing:-.02em}
+.ban h1 b{font-weight:800}
+.ban h1 .ln{display:block;overflow:hidden;padding-bottom:.08em}
+.ban h1 .ln>span{display:inline-block;transform:translateY(105%);animation:up 1s var(--ease) forwards}
+.ban h1 .ln:nth-child(2)>span{animation-delay:.1s}
+@keyframes up{to{transform:none}}
+.ban p.sub{margin-top:14px;max-width:34rem;font-size:1rem;color:rgba(255,255,255,.85)}
+
+/* ---------- sticky "on this page" bar ---------- */
+.fieldnav{position:sticky;top:80px;z-index:30;background:rgba(250,250,248,.9);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.fn-in{display:flex;align-items:center;gap:8px;height:64px;overflow-x:auto;scrollbar-width:none}
+.fn-in::-webkit-scrollbar{display:none}
+.fn-in .lbl{font:700 .7rem/1 var(--display);letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin-right:10px;white-space:nowrap}
+.fn-in a{display:inline-flex;align-items:center;height:38px;padding:0 16px;border-radius:999px;font:600 .84rem/1 var(--display);color:var(--ink2);white-space:nowrap;transition:color .3s,background .3s}
+.fn-in a:hover{background:var(--mist);color:var(--ink)}
+.fn-in a.on{color:#fff;background:var(--ink)}
+
+/* ---------- shared section bits ---------- */
+.sec{padding-block:clamp(72px,9vw,120px)}
+.sec.white{background:var(--white)}
+.sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:clamp(32px,4vw,52px)}
+.sec-head .mix{margin-top:14px;max-width:38rem}
+.sec-head p.lead{max-width:26rem;color:var(--ink2);font-size:.97rem}
+.tag{display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:999px;font:700 .64rem/1 var(--display);letter-spacing:.1em;text-transform:uppercase;background:var(--mist);color:var(--purple)}
+.go{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;flex:none;background:transparent;cursor:pointer;transition:background .4s,border-color .4s,color .4s,transform .5s var(--ease)}
+.go svg{width:16px;height:16px}
+
+/* ---------- 1. campus overview ---------- */
+.ov-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,7vw,110px);align-items:start}
+.ov-copy .mix{margin-top:16px}
+.ov-copy p{margin-top:22px;max-width:32rem;color:var(--ink2)}
+.stats{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line)}
+.stat{padding:26px 20px 26px 0;border-bottom:1px solid var(--line)}
+.stat:nth-child(even){padding-left:20px;border-left:1px solid var(--line)}
+.stat b{display:block;font:800 clamp(1.8rem,2.8vw,2.4rem)/1 var(--display);letter-spacing:-.04em;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;width:fit-content}
+.stat span{display:block;margin-top:10px;font:700 .68rem/1.3 var(--display);letter-spacing:.14em;text-transform:uppercase;color:var(--ink3)}
+/* image box grows to full width on scroll */
+.grow{margin-top:clamp(56px,7vw,96px);padding-inline:var(--gutter)}
+.grow-box{--p:0;position:relative;max-width:calc(var(--maxw) + 2*var(--gutter));margin-inline:auto;height:clamp(320px,72vh,680px);border-radius:var(--r);overflow:hidden;clip-path:inset(0 calc((1 - var(--p)) * 22%) 0 calc((1 - var(--p)) * 22%) round var(--r));will-change:clip-path}
+.grow-box .img{position:absolute;inset:-4% 0;background:var(--img) center/cover no-repeat;transform:scale(calc(1.15 - var(--p) * .15))}
+.grow-box::after{content:"";position:absolute;inset:auto 0 0 0;height:50%;background:linear-gradient(0deg,rgba(21,18,28,.7),transparent)}
+.grow-cap{position:absolute;left:clamp(20px,3vw,40px);right:clamp(20px,3vw,40px);bottom:clamp(20px,3vw,36px);z-index:1;display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;color:#fff;opacity:calc(var(--p) * 1.4 - .3)}
+.grow-cap h3{font:800 clamp(1.4rem,2.6vw,2.2rem)/1.05 var(--display);text-transform:uppercase;letter-spacing:-.02em;max-width:22ch}
+.grow-cap .pins{display:flex;flex-wrap:wrap;gap:8px}
+.grow-cap .pins span{display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 14px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.35);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);font:600 .78rem/1 var(--display)}
+.grow-cap .pins i{width:6px;height:6px;border-radius:50%;background:var(--green)}
+@media (max-width:860px){.ov-grid{grid-template-columns:1fr}.grow-box{clip-path:inset(0 round var(--r))}.grow-box .img{transform:none}.grow-cap{opacity:1}}
+
+/* ---------- 2. facilities ---------- */
+.fac-wrap{display:grid;grid-template-columns:1fr 1.05fr;gap:clamp(36px,5vw,80px);align-items:start}
+.fac-list{border-top:1px solid var(--line);counter-reset:f}
+.fac{position:relative;display:grid;grid-template-columns:52px 1fr auto;gap:0 16px;align-items:start;width:100%;padding:24px 0;border:0;border-bottom:1px solid var(--line);background:none;text-align:left;cursor:pointer}
+.fac::before{content:"";position:absolute;left:0;top:-1px;height:2px;width:100%;background:var(--grad);transform:scaleX(0);transform-origin:left;transition:transform .7s var(--ease)}
+.fac.on::before{transform:none}
+.fac .n{font:800 .78rem/1.9 var(--display);letter-spacing:.06em;color:var(--ink3)}
+.fac h3{font:800 clamp(1.08rem,1.6vw,1.32rem)/1.25 var(--display);text-transform:uppercase;letter-spacing:-.005em;transition:color .4s}
+.fac .more{display:grid;grid-template-rows:0fr;transition:grid-template-rows .6s var(--ease)}
+.fac .more>div{overflow:hidden}
+.fac p{padding-top:10px;max-width:30rem;color:var(--ink2);font-size:.95rem}
+.fac .chips{display:flex;flex-wrap:wrap;gap:6px;padding-top:14px}
+.fac .mimg{display:none}
+.fac .go{width:38px;height:38px;margin-top:-4px}
+.fac:hover h3{color:var(--purple)}
+.fac.on h3{color:var(--ink)}
+.fac.on .more{grid-template-rows:1fr}
+.fac.on .go{background:var(--ink);border-color:var(--ink);color:#fff;transform:rotate(-45deg)}
+.fac-media{position:sticky;top:168px;height:min(640px,calc(100vh - 200px));border-radius:var(--r);overflow:hidden;background:var(--ink)}
+.fac-media .slide{position:absolute;inset:0;background:var(--img) center/cover no-repeat;opacity:0;transform:scale(1.06);transition:opacity .8s var(--ease),transform 1.6s var(--ease)}
+.fac-media .slide.on{opacity:1;transform:none}
+.fac-media::after{content:"";position:absolute;inset:auto 0 0 0;height:45%;background:linear-gradient(0deg,rgba(21,18,28,.75),transparent);pointer-events:none}
+.fm-cap{position:absolute;left:24px;right:24px;bottom:22px;z-index:1;display:flex;align-items:flex-end;justify-content:space-between;gap:16px;color:#fff}
+.fm-cap b{font:800 clamp(3rem,5vw,4.4rem)/.9 var(--display);letter-spacing:-.05em}
+.fm-cap span{font:700 .72rem/1.4 var(--display);letter-spacing:.14em;text-transform:uppercase;text-align:right;opacity:.85;max-width:16rem}
+@media (max-width:860px){
+  .fac-wrap{grid-template-columns:1fr}
+  .fac-media{display:none}
+  .fac .mimg{display:block;margin-top:16px;aspect-ratio:16/10;border-radius:var(--r);background:var(--img) center/cover no-repeat}
+}
+
+/* ---------- 3. 360 view ---------- */
+.tour{position:relative;overflow:hidden;background:var(--ink);color:#fff}
+.tour::before{content:"";position:absolute;width:720px;height:720px;left:-260px;top:-320px;border-radius:50%;background:var(--grad);filter:blur(140px);opacity:.28}
+.tour .container{position:relative}
+.tour .eyebrow{color:#B9A3D9}
+.tour .sec-head p.lead{color:rgba(255,255,255,.7)}
+.pano{position:relative;height:clamp(380px,62vh,620px);border-radius:var(--r);overflow:hidden;cursor:grab;touch-action:pan-y;user-select:none;-webkit-user-select:none;background:#0d0b12}
+.pano.drag{cursor:grabbing}
+.pano-in{position:absolute;top:0;left:0;height:100%;width:180%;will-change:transform}
+.pano-in .scene{position:absolute;inset:0;background:var(--img) center/cover no-repeat;opacity:0;transition:opacity .8s var(--ease)}
+.pano-in .scene.on{opacity:1}
+.pano::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(13,11,18,.6),transparent 35%,transparent 75%,rgba(13,11,18,.45));pointer-events:none}
+.hot{position:absolute;z-index:2;transform:translate(-50%,-50%);display:none;align-items:center;gap:10px;border:0;background:none;color:#fff;cursor:pointer;padding:0}
+.hot.on{display:inline-flex}
+.hot i{position:relative;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 0 0 6px rgba(255,255,255,.25)}
+.hot i::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:2px solid #fff;animation:ping 2s var(--ease) infinite}
+@keyframes ping{from{transform:scale(1);opacity:.8}to{transform:scale(2.2);opacity:0}}
+.hot span{height:32px;display:inline-flex;align-items:center;padding:0 12px;border-radius:999px;background:rgba(21,18,28,.6);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);font:700 .74rem/1 var(--display);white-space:nowrap;opacity:0;transform:translateX(-6px);transition:opacity .3s,transform .4s var(--ease)}
+.hot:hover span,.hot:focus-visible span{opacity:1;transform:none}
+.p-badge{position:absolute;left:18px;top:18px;z-index:3;display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px;border-radius:999px;background:rgba(21,18,28,.55);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);font:700 .7rem/1 var(--display);letter-spacing:.1em;text-transform:uppercase}
+.p-badge i{width:7px;height:7px;border-radius:50%;background:var(--green)}
+.p-hint{white-space:nowrap;position:absolute;left:50%;top:50%;z-index:3;transform:translate(-50%,-50%);display:inline-flex;align-items:center;gap:10px;height:46px;padding:0 20px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.4);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);font:700 .82rem/1 var(--display);pointer-events:none;transition:opacity .5s}
+.p-hint svg{width:20px;height:20px;animation:sway 2.4s ease-in-out infinite}
+@keyframes sway{0%,100%{transform:translateX(-5px)}50%{transform:translateX(5px)}}
+.pano.used .p-hint{opacity:0}
+.p-bar{position:absolute;left:18px;right:18px;bottom:18px;z-index:3;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.scenes{display:flex;gap:6px;padding:5px;border-radius:999px;background:rgba(21,18,28,.55);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);overflow-x:auto;scrollbar-width:none;max-width:100%}
+.scenes button{height:34px;padding:0 14px;border:0;border-radius:999px;background:transparent;color:rgba(255,255,255,.8);cursor:pointer;font:600 .8rem/1 var(--display);white-space:nowrap;transition:background .3s,color .3s}
+.scenes button:hover{color:#fff}
+.scenes button.on{background:#fff;color:var(--ink)}
+.p-fs{width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.45);background:rgba(21,18,28,.45);color:#fff;cursor:pointer;display:grid;place-items:center}
+.p-fs svg{width:18px;height:18px}
+.pano:fullscreen{border-radius:0;height:100vh}
+
+/* ---------- 4. gallery (drag carousel) ---------- */
+.gal-nav{display:flex;align-items:center;gap:14px}
+.gal-nav .ct{font:700 .8rem/1 var(--display);letter-spacing:.06em;color:var(--ink3);min-width:5ch;text-align:right}
+.gal-nav .go:hover{background:var(--ink);border-color:var(--ink);color:#fff}
+.gal-nav .go.prev svg{transform:rotate(180deg)}
+.gal{overflow:hidden;cursor:none;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.gal-track{display:flex;gap:16px;padding-left:max(var(--gutter),calc((100vw - var(--maxw))/2));padding-right:var(--gutter);will-change:transform;width:max-content}
+.gi{flex:none;width:clamp(240px,26vw,380px)}
+.gi.wide{width:clamp(300px,40vw,580px)}
+.gi .ph{height:clamp(300px,34vw,460px);border-radius:var(--r);overflow:hidden;position:relative}
+.gi .ph div{position:absolute;inset:0;background:var(--img) center/cover no-repeat;transition:transform 1s var(--ease)}
+.gi:hover .ph div{transform:scale(1.05)}
+.gi figcaption{display:flex;justify-content:space-between;gap:12px;padding-top:14px;font:700 .9rem/1.3 var(--display)}
+.gi figcaption span{font:600 .74rem/1.3 var(--display);letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)}
+.dcur{position:fixed;left:0;top:0;z-index:60;width:88px;height:88px;margin:-44px 0 0 -44px;border-radius:50%;background:var(--grad);color:#fff;display:grid;place-items:center;font:800 .74rem/1 var(--display);letter-spacing:.14em;text-transform:uppercase;pointer-events:none;transform:scale(0);transition:transform .35s var(--ease)}
+.dcur.on{transform:scale(1)}
+.dcur.down{transform:scale(.82)}
+@media (hover:none){.gal{cursor:grab}.dcur{display:none}}
+
+/* lightbox */
+.lb{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:clamp(16px,4vw,48px);background:rgba(13,11,18,.94);visibility:hidden;opacity:0;transition:opacity .4s,visibility .4s}
+.lb.open{visibility:visible;opacity:1}
+.lb figure{width:min(1200px,100%);color:#fff}
+.lb .lb-img{width:100%;height:min(76vh,780px);border-radius:var(--r);background:var(--img) center/contain no-repeat}
+.lb figcaption{display:flex;justify-content:space-between;gap:16px;padding-top:16px;font:700 .95rem/1.3 var(--display)}
+.lb figcaption span{color:rgba(255,255,255,.55);font-weight:600}
+.lb button{position:absolute;width:48px;height:48px;border-radius:50%;border:1px solid rgba(255,255,255,.4);background:rgba(255,255,255,.06);color:#fff;cursor:pointer;display:grid;place-items:center}
+.lb button svg{width:18px;height:18px}
+.lb .x{top:20px;right:20px}
+.lb .lp{left:20px;top:50%;transform:translateY(-50%)}
+.lb .lp svg{transform:rotate(180deg)}
+.lb .ln{right:20px;top:50%;transform:translateY(-50%)}
+@media (max-width:640px){.lb .lp,.lb .ln{top:auto;bottom:20px;transform:none}}
+
+/* ---------- apply band ---------- */
+.cta{position:relative;overflow:hidden;background:var(--ink);color:#fff;padding-block:clamp(64px,8vw,100px)}
+.cta::before{content:"";position:absolute;width:640px;height:640px;right:-160px;top:-260px;border-radius:50%;background:var(--grad);filter:blur(120px);opacity:.35}
+.cta .container{position:relative;display:flex;align-items:flex-end;justify-content:space-between;gap:32px;flex-wrap:wrap}
+.cta .mix{font-size:clamp(2rem,3.6vw,3rem)}
+.cta p{margin-top:14px;color:rgba(255,255,255,.7);max-width:30rem}
+.cta .acts{display:flex;gap:12px;flex-wrap:wrap}
+.cta+.ftr{border-top:1px solid rgba(255,255,255,.08)}
+
+/* ---------- footer ---------- */
+.ftr{position:relative;background:var(--ink);color:#fff;overflow:hidden;padding-top:64px}
+.ftr .emblem{right:-80px;bottom:-200px;width:620px;opacity:.06}
+.ftr-grid{position:relative;z-index:1;display:grid;grid-template-columns:1.6fr 1fr 1.2fr 1fr;gap:40px}
+.ftr .logo svg{height:20px}
+.ftr p.pitch{margin-top:18px;max-width:17rem;font-size:.85rem;line-height:1.6;color:rgba(255,255,255,.55)}
+.ftr h4{margin:0 0 16px;font:600 .8rem/1 var(--display);letter-spacing:.08em;text-transform:uppercase}
+.ftr li{margin-bottom:10px;font-size:.85rem;color:rgba(255,255,255,.6)}
+.ftr li a{transition:color .3s}
+.ftr li a:hover{color:#fff}
+.ftr-base{position:relative;z-index:1;margin-top:48px;padding-block:22px;border-top:1px solid rgba(255,255,255,.1);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px 24px;font-size:.75rem;color:rgba(255,255,255,.4)}
+.ftr-base a:hover{color:#fff}
+@media (max-width:860px){.ftr-grid{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){.ftr-grid{grid-template-columns:1fr}}
+
+.rv{opacity:0;transform:translateY(26px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.rv.in{opacity:1;transform:none}
+.rv.d1{transition-delay:.08s}.rv.d2{transition-delay:.16s}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition-duration:.01ms!important}
+  .rv{opacity:1;transform:none}
+  .ban h1 .ln>span{transform:none}
+  .grow-box{clip-path:inset(0 round 12px)}.grow-cap{opacity:1}
+}
+</style>
+<link rel="stylesheet" href="assets/v4.css">
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="logo" viewBox="0 0 485 77"><g fill="currentColor">
+      <path d="M128.13 0.01H126.62V76.32H128.13V0.01Z"/>
+      <path d="M107.24 76.33H84.69L69.01 60.64C62.07 70.15 50.84 76.33 38.16 76.33C16.99 76.33 -0.16 59.08 0 37.88C0.16 16.94 17.39 -0.08 38.34 0.01C50.95 0.07 62.12 6.25 69.02 15.73L84.71 0.01H107.29L75.75 31.61L69.18 38.19L57.89 26.88L54.24 23.22C50.09 18.76 44.12 16.03 37.51 16.22C25.91 16.56 16.5 26.02 16.21 37.62C15.91 49.99 25.85 60.12 38.16 60.12C44.1 60.12 49.49 57.76 53.44 53.93H53.47L57.89 49.5L69.18 38.19L75.74 44.77L107.23 76.33H107.24Z"/>
+      <path d="M38.52 28.8C37.94 37.11 37.48 37.58 29.16 38.15C37.47 38.73 37.94 39.19 38.51 47.51C39.06 39.58 39.52 38.79 46.77 38.24L56.03 38.32C56.03 38.32 56.11 38.28 56.11 38.24C56.11 38.2 56.07 38.16 56.03 38.16L46.77 38.08C39.52 37.52 39.07 36.73 38.53 28.8H38.52Z"/>
+      <path d="M271.37 61.45V76.3H226.53V0H241.48V61.44H271.37V61.45Z"/>
+      <path d="M312.97 14.82H294.7V76.31H279.71V14.82H261.4V0.01H312.97V14.82Z"/>
+      <path d="M377.88 0.01V76.31H362.98V46.51H336.27V76.31H321.37V0.01H336.27V29.76H362.98V0.01H377.88Z"/>
+      <path d="M390.8 0.01H405.75V76.31H390.8V0.01Z"/>
+      <path d="M183.54 0.1H183.07L167.59 33.32H175.34L164.65 39.63L147.56 76.31H163.7L174.26 53.2L183.35 33.32L192.39 53.2L198.2 65.93L202.91 76.31H219.1L183.54 0.1Z"/>
+      <path d="M448.84 0.1H448.38L432.9 33.32H440.64L429.95 39.63L412.86 76.31H429L439.57 53.2L448.65 33.32L457.69 53.2L463.51 65.93L468.21 76.31H484.4L448.84 0.1Z"/>
+    </g></symbol>
+    <symbol id="emblem" viewBox="0 0 108 77"><g fill="currentColor">
+      <path d="M107.24 76.31H84.69L69.01 60.62C62.07 70.13 50.84 76.31 38.16 76.31C16.99 76.31 -.16 59.07 0 37.87C.16 16.92 17.4-.1 38.34 0C50.95.06 62.12 6.24 69.02 15.72L84.71 0H107.29L75.75 31.6L69.18 38.18L57.89 26.87L54.24 23.21C50.09 18.75 44.12 16.02 37.51 16.21C25.91 16.55 16.5 26.01 16.21 37.61C15.91 49.98 25.85 60.11 38.16 60.11C44.1 60.11 49.49 57.75 53.44 53.92H53.47L57.89 49.49L69.18 38.18L75.74 44.76L107.23 76.32Z"/>
+      <path d="M38.52 28.78C37.94 37.09 37.48 37.56 29.16 38.13C37.47 38.71 37.94 39.17 38.51 47.49C39.06 39.56 39.52 38.77 46.77 38.22L56.03 38.3C56.11 38.26 56.07 38.14 56.03 38.14L46.77 38.06C39.52 37.5 39.07 36.71 38.53 28.78Z"/>
+    </g></symbol>
+    <symbol id="arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  </defs>
+</svg>
+
+<header class="hdr" id="hdr">
+  <div class="container hdr-in">
+    <a class="logo" href="index.html" aria-label="ALTHIA home"><img src="assets/img/althia-logo.svg" alt="ALTHIA — SLIIT-Hemas Health Uni"></a>
+    <nav class="nav" id="nav" aria-label="Main">
+      <a href="about-us.html">About</a>
+      <a href="programmes.html">Programmes</a>
+      <a href="campus-facilities.html" aria-current="page">Campus</a>
+      <a href="admissions.html">Admissions</a>
+      <a href="insights.html">Insights</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <a class="btn" href="https://apply.sliit.lk/" target="_blank" rel="noopener">Apply Now</a>
+    <button class="menu-btn" id="menuBtn" aria-label="Menu" aria-expanded="false"><span></span></button>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- BANNER -->
+<section class="ban">
+  <div class="ban-img" data-img="banner" role="img" aria-label="Aerial view of the ALTHIA campus surrounded by greenery"></div>
+  <svg class="emblem" viewBox="0 0 108 77" aria-hidden="true"><use href="#emblem"/></svg>
+  <div class="container">
+    <nav class="crumb" aria-label="Breadcrumb"><a href="index.html">Home</a><i></i><span>Campus &amp; Facilities</span></nav>
+    <h1><span class="ln"><span>One campus.</span></span><span class="ln"><span><b>Built for care.</b></span></span></h1>
+    <p class="sub">25 green acres in Malabe, with labs, studios and spaces made for the way health professionals learn.</p>
+  </div>
+</section>
+
+<!-- ON THIS PAGE -->
+<nav class="fieldnav" aria-label="On this page">
+  <div class="container fn-in" id="fieldNav">
+    <span class="lbl">On this page</span>
+    <a href="#overview">Overview</a>
+    <a href="#facilities">Facilities</a>
+    <a href="#tour">360° view</a>
+    <a href="#gallery">Gallery</a>
+  </div>
+</nav>
+
+<!-- 1. CAMPUS OVERVIEW -->
+<section class="sec" id="overview" style="padding-bottom:0">
+  <div class="container ov-grid">
+    <div class="ov-copy rv">
+      <span class="eyebrow">Campus overview</span>
+      <h2 class="mix">A 25-acre <b>smart campus.</b></h2>
+      <p>ALTHIA sits within the SLIIT Malabe campus, a 25-acre green setting just outside Colombo. Every building is connected, every lab is current, and quiet spaces are never far away.</p>
+      <p>You train in the same kind of rooms you will work in, from simulated hospital wards to research-grade labs, with Hemas Hospitals clinicians close at hand.</p>
+    </div>
+    <div class="stats rv d1">
+      <div class="stat"><b>25</b><span>Acres of green campus</span></div>
+      <div class="stat"><b>12</b><span>Specialist labs &amp; suites</span></div>
+      <div class="stat"><b>100%</b><span>Wi-Fi &amp; smart classrooms</span></div>
+      <div class="stat"><b>1,500+</b><span>Library &amp; study seats</span></div>
+    </div>
+  </div>
+  <div class="grow">
+    <div class="grow-box" id="growBox">
+      <div class="img" data-img="overview" role="img" aria-label="Campus buildings and green lawns"></div>
+      <div class="grow-cap">
+        <h3>Green, connected and close to Colombo</h3>
+        <div class="pins"><span><i></i>New Kandy Road, Malabe</span><span><i></i>Hemas Hospitals nearby</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. FACILITIES -->
+<section class="sec" id="facilities">
+  <div class="container">
+    <div class="sec-head rv">
+      <div><span class="eyebrow">Facilities</span><h2 class="mix">Spaces that <b>teach as much as we do.</b></h2></div>
+      <p class="lead">From your first skills session to final-year research, these are the rooms where it happens.</p>
+    </div>
+    <div class="fac-wrap">
+      <div class="fac-list" id="facList"></div>
+      <div class="fac-media" id="facMedia" aria-hidden="true">
+        <div class="fm-cap"><b id="fmNum">01</b><span id="fmUse"></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. 360 VIEW -->
+<section class="sec tour" id="tour">
+  <div class="container">
+    <div class="sec-head rv">
+      <div><span class="eyebrow">360° campus view</span><h2 class="mix">Walk the campus <b>from anywhere.</b></h2></div>
+      <p class="lead">Drag to look around, tap a point to jump to that facility, or switch spots below.</p>
+    </div>
+    <div class="pano rv d1" id="pano" aria-label="Interactive campus view. Drag to look around.">
+      <div class="pano-in" id="panoIn"></div>
+      <span class="p-badge"><i></i>Campus preview</span>
+      <span class="p-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12h8M5 9l-3 3 3 3M19 9l3 3-3 3"/></svg>Drag to look around</span>
+      <div class="p-bar">
+        <div class="scenes" id="scenes" role="tablist" aria-label="Campus spots"></div>
+        <button class="p-fs" id="panoFs" aria-label="Full screen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. GALLERY -->
+<section class="sec" id="gallery">
+  <div class="container">
+    <div class="sec-head rv">
+      <div><span class="eyebrow">Campus gallery · Photos &amp; videos</span><h2 class="mix">A day <b>on campus.</b></h2></div>
+      <div class="gal-nav"><div class="v4-chips" id="galTabs" role="tablist" aria-label="Gallery type"><button class="on" data-t="img" role="tab" aria-selected="true">Images</button><button data-t="vid" role="tab" aria-selected="false">Videos</button></div>
+        <span class="ct" id="galCt">01 / 08</span>
+        <button class="go prev" id="galPrev" aria-label="Previous photos"><svg><use href="#arrow"/></svg></button>
+        <button class="go" id="galNext" aria-label="Next photos"><svg><use href="#arrow"/></svg></button>
+      </div>
+    </div>
+  </div>
+  <div class="gal rv d1" id="gal"><div class="gal-track" id="galTrack"></div></div>
+</section>
+
+<!-- APPLY BAND -->
+<section class="cta">
+  <div class="container">
+    <div class="rv">
+      <h2 class="mix">See it <b>in person.</b></h2>
+      <p>Book a campus visit and walk the labs with our team. Call <span style="white-space:nowrap">+94 76 330 6603</span>.</p>
+    </div>
+    <div class="acts rv d1">
+      <a class="btn lg" href="contact.html?topic=visit#enquire">Book a campus visit <span class="ar">&rarr;</span></a>
+      <a class="btn lg ghost" href="https://apply.sliit.lk/" target="_blank" rel="noopener">Apply Now</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<div class="dcur" id="dcur" aria-hidden="true">Drag</div>
+
+<div class="lb" id="lb" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Photo viewer">
+  <button class="x" data-lb="x" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+  <button class="lp" data-lb="p" aria-label="Previous"><svg><use href="#arrow"/></svg></button>
+  <figure><div class="lb-img" id="lbImg"></div><figcaption><b id="lbT"></b><span id="lbN"></span></figcaption></figure>
+  <button class="ln" data-lb="n" aria-label="Next"><svg><use href="#arrow"/></svg></button>
+</div>
+
+<footer class="ftr" id="contact">
+  <svg class="emblem" viewBox="0 0 108 77" aria-hidden="true"><use href="#emblem"/></svg>
+  <div class="container">
+    <div class="ftr-grid">
+      <div>
+        <a class="logo" href="index.html" aria-label="ALTHIA home"><img src="assets/img/althia-logo-white.svg" alt="ALTHIA — SLIIT-Hemas Health Uni"></a>
+        <p class="pitch">A health sciences university college shaping Sri Lanka's next generation of clinicians, carers and researchers.</p>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <ul><li><a href="programmes.html">Programmes</a></li><li><a href="short-courses.html">Short Courses</a></li><li><a href="campus-facilities.html">Campus &amp; Facilities</a></li><li><a href="about-us.html">About Althia</a></li><li><a href="admissions.html">Admissions</a></li><li><a href="insights.html">Insights</a></li><li><a href="https://apply.sliit.lk/" target="_blank" rel="noopener">Apply Now</a></li></ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul><li>SLIIT Malabe Campus,<br>New Kandy Road, Malabe</li><li>+94 11 754 4801</li><li>+94 76 330 6603</li><li>reach@althia.lk</li></ul>
+      </div>
+      <div>
+        <h4>Follow</h4>
+        <ul><li><a href="https://www.instagram.com/althia_lk" target="_blank" rel="noopener">Instagram</a></li><li><a href="https://www.facebook.com/profile.php?id=61585632940458" target="_blank" rel="noopener">Facebook</a></li><li><a href="https://www.tiktok.com/@sliit_hemas" target="_blank" rel="noopener">TikTok</a></li><li><a href="https://www.linkedin.com/company/sliit-hemas-allied-health-institute/" target="_blank" rel="noopener">LinkedIn</a></li></ul>
+      </div>
+    </div>
+    <div class="ftr-base"><span>&copy; 2026 ALTHIA. All rights reserved.</span><span><a href="#soon" data-soon>Privacy Policy</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#soon" data-soon>Terms of Service</a></span></div>
+  </div>
+</footer>
+
+<script>
+/* =====================================================================
+   IMAGES — one place to swap photos.
+   Placeholders are free Unsplash photos. To use your own, replace a value
+   with a relative path, e.g.  banner: 'images/campus/01-banner.jpg'
+   ===================================================================== */
+function U(id,w){return 'https://images.unsplash.com/photo-'+id+'?auto=format&fit=crop&w='+(w||1800)+'&q=80'}
+var IMG={
+  /* banner + overview */
+  banner:   U('1788591462308-8b546246a2de',2200), /* 01 aerial campus in greenery */
+  overview: U('1510758588288-aa8cf9445f5b',2200), /* 02 wide campus / lawns */
+  /* facilities */
+  f_sim:    U('1783519890730-3436fd0bf965'),      /* 03 clinical simulation lab */
+  f_bio:    U('1614935151651-0bea6508db6b'),      /* 04 biomedical science lab */
+  f_psy:    U('1706968983809-36cb29a3d56b'),      /* 05 psychology & counselling suite */
+  f_lib:    U('1564981797816-1043664bf78d'),      /* 06 library & learning commons */
+  f_lec:    U('1758270705067-0d7edee57af0'),      /* 07 smart lecture hall */
+  f_sport:  U('1775993167393-f2add1f8eec2'),      /* 08 indoor sports arena */
+  f_well:   U('1758970081655-a9c08d367e68'),      /* 09 wellbeing pod */
+  f_studio: U('1478737270239-2f02b77fc618'),      /* 10 media studio */
+  /* 360 view scenes (replace with real 360 tour later) */
+  p_lawn:   U('1767855017537-0c7c74f50ba9',2800), /* 11 main lawn / campus */
+  p_lab:    U('1645684996558-561e6c914e3e',2800), /* 12 clinical lab wide */
+  p_sport:  U('1761971976282-b2bb051a5474',2800), /* 13 sports & fitness wide */
+  /* gallery */
+  g1: U('1707960572634-8b7649870d95'), /* 14 students on the lawn */
+  g2: U('1602052577122-f73b9710adba'), /* 15 lab bench */
+  g3: U('1770215624975-12e0db0b83ec'), /* 16 CPR practice */
+  g4: U('1683319598210-d70486f2f996'), /* 17 library study */
+  g5: U('1567880905822-56f8e06fe630'), /* 18 cafe / student hub */
+  g6: U('1758270704286-83476deb3bd1'), /* 19 lecture */
+  g7: U('1761971975769-97e598bf526b'), /* 20 gym */
+  g8: U('1763924121223-9152f8ebccb6')  /* 21 campus at night */
+};
+
+/* ---------- facilities data (copy is dummy; confirm with client) ---------- */
+var FAC=[
+  {k:'f_sim',t:'Clinical simulation labs',d:'Mock hospital wards with high-fidelity patient manikins, monitors and real equipment. Practise until it feels routine.',use:['Nursing','Health Science']},
+  {k:'f_bio',t:'Biomedical science labs',d:'Research-grade microscopes, PCR and analysers for haematology, microbiology and clinical chemistry.',use:['Biomedical Science']},
+  {k:'f_psy',t:'Psychology & counselling suites',d:'Observation rooms and quiet counselling spaces for supervised practice, testing and research.',use:['Psychology']},
+  {k:'f_lib',t:'Library & learning commons',d:'Print and digital collections, group study rooms and silent zones, open late during exams.',use:['All students']},
+  {k:'f_lec',t:'Smart lecture halls',d:'Tiered halls and flexible classrooms with lecture capture, so you can rewatch any session.',use:['All students']},
+  {k:'f_sport',t:'Sports arenas',d:'Indoor courts, a fitness centre and outdoor grounds for cricket, football and athletics.',use:['All students','Sports clubs']},
+  {k:'f_well',t:'Wellbeing pods',d:'Calm, private pods for rest, reflection or a talk with our student wellbeing team.',use:['All students']},
+  {k:'f_studio',t:'Media & content studios',d:'Recording booths and edit suites for presentations, health campaigns and student podcasts.',use:['All students']}
+];
+var SCENES=[
+  {k:'p_lawn',t:'Main lawn',hot:[{x:30,y:58,t:'Library',to:3},{x:62,y:46,t:'Lecture halls',to:4},{x:84,y:62,t:'Sports grounds',to:5}]},
+  {k:'p_lab',t:'Clinical lab',hot:[{x:38,y:55,t:'Simulation ward',to:0},{x:70,y:50,t:'Patient monitor',to:0}]},
+  {k:'p_sport',t:'Sports & fitness',hot:[{x:44,y:60,t:'Fitness centre',to:5},{x:76,y:52,t:'Wellbeing pods',to:6}]}
+];
+var GAL=[
+  {k:'g1',t:'Between lectures',c:'Campus life',w:1},
+  {k:'g2',t:'Biomedical lab',c:'Labs'},
+  {k:'g3',t:'Life support training',c:'Simulation',w:1},
+  {k:'g4',t:'Library study',c:'Learning'},
+  {k:'g5',t:'Student café',c:'Campus life'},
+  {k:'g6',t:'Lecture hall',c:'Learning',w:1},
+  {k:'g7',t:'Fitness centre',c:'Sports'},
+  {k:'g8',t:'Campus after dark',c:'Campus life',w:1},
+  /* v4: videos — put the YouTube video ID in v ('' shows "coming soon") */
+  {k:'g1',t:'Campus walkthrough',c:'Video',w:1,v:''},
+  {k:'g3',t:'Simulation lab in action',c:'Video',v:''},
+  {k:'g7',t:'Sports & fitness tour',c:'Video',w:1,v:''}
+];
+
+(function(){
+  var $=function(s,r){return (r||document).querySelector(s)},$$=function(s,r){return [].slice.call((r||document).querySelectorAll(s))};
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var pad=function(n){return String(n).padStart(2,'0')};
+  var arrow='<svg><use href="#arrow"/></svg>';
+
+  /* ---- build facilities ---- */
+  var list=$('#facList'),media=$('#facMedia');
+  list.innerHTML=FAC.map(function(f,i){
+    return '<div class="fac'+(i?'':' on')+'" data-i="'+i+'" role="button" tabindex="0" aria-expanded="'+(i?'false':'true')+'">'+
+      '<span class="n">'+pad(i+1)+'</span>'+
+      '<div><h3>'+f.t+'</h3><div class="more"><div><p>'+f.d+'</p><div class="chips">'+f.use.map(function(u){return '<span class="tag">'+u+'</span>'}).join('')+'</div><div class="mimg" data-img="'+f.k+'"></div></div></div></div>'+
+      '<span class="go">'+arrow+'</span></div>';
+  }).join('');
+  FAC.forEach(function(f,i){var s=document.createElement('div');s.className='slide'+(i?'':' on');s.dataset.img=f.k;media.insertBefore(s,media.firstChild)});
+  var slides=$$('.slide',media).reverse(),facs=$$('.fac',list),cur=0;
+  function setFac(i){
+    if(i===cur)return;cur=i;
+    facs.forEach(function(b,j){b.classList.toggle('on',j===i);b.setAttribute('aria-expanded',j===i)});
+    slides.forEach(function(s,j){s.classList.toggle('on',j===i)});
+    $('#fmNum').textContent=pad(i+1);$('#fmUse').textContent=FAC[i].use.join(' · ');
+  }
+  $('#fmUse').textContent=FAC[0].use.join(' · ');
+  facs.forEach(function(b,i){
+    b.addEventListener('click',function(){setFac(i)});
+    b.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();setFac(i)}});
+    b.addEventListener('mouseenter',function(){if(matchMedia('(min-width:861px)').matches)setFac(i)});
+  });
+
+  /* ---- 360 view (drag-pan preview) ---- */
+  var pano=$('#pano'),pin=$('#panoIn'),sc=$('#scenes'),x=0,min=0,vx=0,raf=0,scene=0;
+  pin.innerHTML=SCENES.map(function(s,i){
+    return '<div class="scene'+(i?'':' on')+'" data-img="'+s.k+'"></div>'+
+      s.hot.map(function(h){return '<button class="hot'+(i?'':' on')+'" data-s="'+i+'" data-to="'+h.to+'" style="left:'+h.x+'%;top:'+h.y+'%"><i></i><span>'+h.t+'</span></button>'}).join('');
+  }).join('');
+  sc.innerHTML=SCENES.map(function(s,i){return '<button class="'+(i?'':'on')+'" data-i="'+i+'" role="tab">'+s.t+'</button>'}).join('');
+  function bounds(){min=pano.clientWidth-pin.offsetWidth;x=Math.max(min,Math.min(0,x));pin.style.transform='translate3d('+x+'px,0,0)'}
+  function setScene(i){
+    scene=i;
+    $$('.scene',pin).forEach(function(s,j){s.classList.toggle('on',j===i)});
+    $$('.hot',pin).forEach(function(h){h.classList.toggle('on',+h.dataset.s===i)});
+    $$('button',sc).forEach(function(b,j){b.classList.toggle('on',j===i)});
+    x=min/2;bounds();
+  }
+  sc.addEventListener('click',function(e){var b=e.target.closest('button');if(b)setScene(+b.dataset.i)});
+  pin.addEventListener('click',function(e){var h=e.target.closest('.hot');if(!h||moved)return;setFac(+h.dataset.to);$('#facilities').scrollIntoView({behavior:reduce?'auto':'smooth'})});
+  var down=false,sx=0,ox=0,lx=0,lt=0,moved=false;
+  pano.addEventListener('pointerdown',function(e){if(e.target.closest('.p-bar'))return;down=true;moved=false;sx=lx=e.clientX;ox=x;lt=performance.now();vx=0;cancelAnimationFrame(raf);pano.classList.add('drag')});
+  addEventListener('pointermove',function(e){if(!down)return;var dx=e.clientX-sx;if(Math.abs(dx)>4){moved=true;pano.classList.add('used')}x=ox+dx;var now=performance.now();vx=(e.clientX-lx)/Math.max(1,now-lt)*16;lx=e.clientX;lt=now;bounds()});
+  addEventListener('pointerup',function(){if(!down)return;down=false;pano.classList.remove('drag');(function glide(){vx*=.93;x+=vx;bounds();if(Math.abs(vx)>.3&&!reduce)raf=requestAnimationFrame(glide)})()});
+  $('#panoFs').addEventListener('click',function(){if(document.fullscreenElement)document.exitFullscreen();else if(pano.requestFullscreen)pano.requestFullscreen()});
+  addEventListener('resize',bounds);document.addEventListener('fullscreenchange',function(){setTimeout(bounds,60)});
+  requestAnimationFrame(function(){bounds();x=min/2;bounds()});
+  /* slow idle drift until the user drags */
+  if(!reduce){var dir=-1;(function drift(){if(!pano.classList.contains('used')&&!down){x+=dir*.25;if(x<=min||x>=0)dir*=-1;bounds()}requestAnimationFrame(drift)})()}
+
+  /* ---- gallery: drag carousel + lightbox ---- */
+  var gal=$('#gal'),tr=$('#galTrack'),gx=0,gmin=0,gv=0,graf=0,gdown=false,gsx=0,gox=0,glx=0,glt=0,gmoved=false;
+  /* v4: Images / Videos tabs */
+  var GT='img',items=[];
+  function grender(){tr.innerHTML=GAL.map(function(g,i){if((GT==='vid')!==('v' in g))return '';return '<figure class="gi'+(g.w?' wide':'')+('v' in g?' vid':'')+'" data-i="'+i+'"><div class="ph"><div data-img="'+g.k+'" role="img" aria-label="'+g.t+'"></div>'+('v' in g?'<span class="v4-gtype">Video</span><span class="v4-play"><i></i></span>':'')+'</div><figcaption>'+g.t+'<span>'+g.c+'</span></figcaption></figure>'}).join('');
+    items=$$('.gi',tr);gx=0;tr.style.transform='translate3d(0,0,0)';
+    $$('[data-img]',tr).forEach(function(el){var u=IMG[el.dataset.img];if(!u){el.classList.add('noimg');return}var im=new Image();im.onload=function(){el.style.setProperty('--img','url("'+u+'")')};im.onerror=function(){el.classList.add('noimg')};im.src=u});
+    if(typeof gb==='function')gb()}
+  grender();
+  $$('#galTabs button').forEach(function(b){b.addEventListener('click',function(){$$('#galTabs button').forEach(function(x){x.classList.toggle('on',x===b);x.setAttribute('aria-selected',x===b)});GT=b.dataset.t;grender()})});
+  function gb(){gmin=Math.min(0,gal.clientWidth-tr.scrollWidth);gx=Math.max(gmin,Math.min(0,gx));tr.style.transform='translate3d('+gx+'px,0,0)';
+    var off=-gx,idx=0;items.forEach(function(it,i){if(it.offsetLeft-items[0].offsetLeft<=off+10)idx=i});$('#galCt').textContent=pad(idx+1)+' / '+pad(items.length)}
+  function gto(t){var from=gx,to=Math.max(gmin,Math.min(0,t)),t0=performance.now();cancelAnimationFrame(graf);
+    (function step(n){var p=Math.min(1,(n-t0)/700),e=1-Math.pow(1-p,4);gx=from+(to-from)*e;gb();if(p<1)graf=requestAnimationFrame(step)})(t0)}
+  var stepW=function(){return items.length>1?items[1].offsetLeft-items[0].offsetLeft:300};
+  $('#galNext').addEventListener('click',function(){gto(gx-stepW()*1.5)});
+  $('#galPrev').addEventListener('click',function(){gto(gx+stepW()*1.5)});
+  gal.addEventListener('pointerdown',function(e){gdown=true;gmoved=false;gsx=glx=e.clientX;gox=gx;glt=performance.now();gv=0;cancelAnimationFrame(graf);dc.classList.add('down')});
+  addEventListener('pointermove',function(e){if(!gdown)return;var dx=e.clientX-gsx;if(Math.abs(dx)>5)gmoved=true;gx=gox+dx;var n=performance.now();gv=(e.clientX-glx)/Math.max(1,n-glt)*16;glx=e.clientX;glt=n;gb()});
+  addEventListener('pointerup',function(){if(!gdown)return;gdown=false;dc.classList.remove('down');(function glide(){gv*=.94;gx+=gv;gb();if(Math.abs(gv)>.3&&!reduce)graf=requestAnimationFrame(glide)})()});
+  addEventListener('resize',gb);
+  /* "Drag" cursor */
+  var dc=$('#dcur');
+  gal.addEventListener('pointerenter',function(e){if(e.pointerType==='mouse')dc.classList.add('on')});
+  gal.addEventListener('pointerleave',function(){dc.classList.remove('on')});
+  addEventListener('pointermove',function(e){dc.style.left=e.clientX+'px';dc.style.top=e.clientY+'px'},{passive:true});
+  /* lightbox */
+  var lb=$('#lb'),li=0,last=null;
+  function show(i,dir){var n=GAL.length;i=(i+n)%n;while('v' in GAL[i])i=(i+(dir||1)+n)%n;li=i;var g=GAL[li],u=IMG[g.k];$('#lbImg').style.setProperty('--img','url("'+u.replace(/w=\d+/,'w=2400')+'")');$('#lbT').textContent=g.t;var IM=GAL.filter(function(x){return !('v' in x)});$('#lbN').textContent=pad(IM.indexOf(g)+1)+' / '+pad(IM.length)}
+  function lopen(i){last=document.activeElement;show(i);lb.classList.add('open');lb.setAttribute('aria-hidden','false');document.body.classList.add('lock');$('.x',lb).focus()}
+  function lclose(){lb.classList.remove('open');lb.setAttribute('aria-hidden','true');document.body.classList.remove('lock');if(last)last.focus()}
+  tr.addEventListener('click',function(e){var f=e.target.closest('.gi');if(f&&!gmoved){var g=GAL[+f.dataset.i];if('v' in g&&window.V4)V4.openVideo(g.v,g.t,IMG[g.k]);else lopen(+f.dataset.i)}});
+  lb.addEventListener('click',function(e){var b=e.target.closest('[data-lb]');if(b){var a=b.dataset.lb;if(a==='x')lclose();else show(li+(a==='n'?1:-1),a==='n'?1:-1)}else if(e.target===lb)lclose()});
+  document.addEventListener('keydown',function(e){if(!lb.classList.contains('open'))return;if(e.key==='Escape')lclose();if(e.key==='ArrowRight')show(li+1,1);if(e.key==='ArrowLeft')show(li-1,-1)});
+
+  /* ---- load images with gradient fallback ---- */
+  $$('[data-img]').forEach(function(el){
+    var u=IMG[el.dataset.img];if(!u){el.classList.add('noimg');return}
+    var im=new Image();
+    im.onload=function(){el.style.setProperty('--img','url("'+u+'")')};
+    im.onerror=function(){el.classList.add('noimg');console.warn('[ALTHIA] image failed:',el.dataset.img)};
+    im.src=u;
+  });
+
+  /* ---- header, menu, reveals, sticky bar, grow box ---- */
+  var hdr=$('#hdr'),menuBtn=$('#menuBtn');
+  menuBtn.addEventListener('click',function(){var o=hdr.classList.toggle('open');menuBtn.setAttribute('aria-expanded',o)});
+  $$('#nav a').forEach(function(a){a.addEventListener('click',function(){hdr.classList.remove('open');menuBtn.setAttribute('aria-expanded','false')})});
+  $$('[data-soon]').forEach(function(a){a.addEventListener('click',function(e){e.preventDefault()})});
+  var els=$$('.rv');
+  if('IntersectionObserver' in window&&!reduce){
+    var io=new IntersectionObserver(function(en){en.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.15});
+    els.forEach(function(el){io.observe(el)});
+  }else els.forEach(function(el){el.classList.add('in')});
+  var links=$$('#fieldNav a'),secs=links.map(function(a){return $(a.getAttribute('href'))}),grow=$('#growBox');
+  function onScroll(){
+    hdr.classList.toggle('solid',scrollY>innerHeight*.4);
+    var c=-1,mid=innerHeight*.45;
+    secs.forEach(function(f,i){var r=f.getBoundingClientRect();if(r.top<mid&&r.bottom>mid)c=i});
+    links.forEach(function(a,i){a.classList.toggle('on',i===c)});
+    if(!reduce){var r=grow.getBoundingClientRect(),p=(innerHeight-r.top)/(innerHeight*.85);grow.style.setProperty('--p',Math.max(0,Math.min(1,p)).toFixed(3))}
+    /* desktop: active facility follows scroll */
+    if(matchMedia('(min-width:861px)').matches){
+      var lr=list.getBoundingClientRect();
+      if(lr.top<innerHeight*.5&&lr.bottom>innerHeight*.5){
+        var best=cur;facs.forEach(function(b,i){var br=b.getBoundingClientRect();if(br.top<innerHeight*.5)best=i});
+        if(scrollMoved)setFac(best);
+      }
+    }
+  }
+  var scrollMoved=false,t=false;
+  addEventListener('scroll',function(){scrollMoved=true;if(!t){t=true;requestAnimationFrame(function(){t=false;onScroll()})}},{passive:true});
+  addEventListener('resize',onScroll);onScroll();gb();
+})();
+</script>
+<script src="assets/v4.js"></script>
+</body>
+</html>

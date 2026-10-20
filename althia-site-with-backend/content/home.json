@@ -1,0 +1,51 @@
+{
+  "event": {
+    "show": true,
+    "badge": "Upcoming event",
+    "title": "Open Day: February 2027 intake",
+    "start": "2026-11-14T09:00",
+    "date_label": "Saturday, 14 November 2026",
+    "time_label": "9:00 am – 2:00 pm",
+    "venue": "SLIIT Malabe Campus",
+    "button_label": "Event details",
+    "link": "insights-detail.html?p=open-day-february-2027",
+    "done_text": "Open Day is happening now. Walk in!"
+  },
+  "videos": [
+    {
+      "title": "Why I chose ALTHIA for nursing",
+      "subtitle": "S. Perera · HND in Nursing",
+      "duration": "2:14",
+      "youtube": "",
+      "thumbnail": "/assets/img/students.jpg"
+    },
+    {
+      "title": "A day in the simulation suite",
+      "subtitle": "Nursing students",
+      "duration": "1:48",
+      "youtube": "",
+      "thumbnail": "/assets/img/nursing.jpg"
+    },
+    {
+      "title": "Studying psychology at ALTHIA",
+      "subtitle": "A. Fernando · Psychology",
+      "duration": "2:31",
+      "youtube": "",
+      "thumbnail": "/assets/img/psychology.jpg"
+    },
+    {
+      "title": "Inside the biomedical labs",
+      "subtitle": "R. Jayasinghe · Biomedical Science",
+      "duration": "1:56",
+      "youtube": "",
+      "thumbnail": "/assets/img/biomedical.jpg"
+    },
+    {
+      "title": "Campus life at Malabe",
+      "subtitle": "Student tour",
+      "duration": "3:05",
+      "youtube": "",
+      "thumbnail": "/assets/img/campus.jpg"
+    }
+  ]
+}
