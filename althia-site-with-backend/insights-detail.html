@@ -312,6 +312,11 @@ button{font:inherit;color:inherit}
 .toast.on{opacity:1;transform:translate(-50%,0)}
 </style>
 <link rel="stylesheet" href="assets/v4.css">
+<style>/* v4 round 4: no left share rail, article + sidebar only */
+.abody{grid-template-columns:minmax(0,700px) 300px}
+@media (max-width:1100px){.abody{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:760px){.abody[data-type="event"] .side,.abody[data-type="research"] .side{grid-row:1}.abody[data-type="event"] .prose,.abody[data-type="research"] .prose{grid-row:2}}
+</style>
 </head>
 <body>
 
@@ -384,7 +389,6 @@ button{font:inherit;color:inherit}
 <!-- 3. WRITE-UP -->
 <div class="container">
   <div class="abody" id="abody">
-    <div class="rail" aria-label="Share this post"><span class="lbl">Share</span><div class="shares" style="display:contents"></div></div>
     <article class="prose" id="prose"></article>
     <aside class="side" id="side"></aside>
   </div>
@@ -804,7 +808,7 @@ window.__althiaRender=function(){
     if(t==='kw')return '<div class="kw">'+b[1].map(function(k){return '<span class="tag">'+esc(k)+'</span>'}).join('')+'</div>';
     return '';
   }).join('')+
-  v4Gallery(P)+'<div class="aend"><a class="back" href="insights.html?type='+P.type+'"><svg><use href="#arrow"/></svg>Back to '+typeLbl.toLowerCase()+'</a></div>';
+  v4Gallery(P)+'<div class="aend"><div class="shr"><b>Share</b><span class="shares" style="display:contents"></span></div><a class="back" href="insights.html?type='+P.type+'"><svg><use href="#arrow"/></svg>Back to '+typeLbl.toLowerCase()+'</a></div>';
   $('#abody').dataset.type=P.type;
 
   /* ---- share buttons (both rail and end of article) ---- */
